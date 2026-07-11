@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
-import CMSDashboard from './CMSDashboard.jsx';
+import VISUAL_CMS_Dashboard from './VISUAL_CMS_Dashboard.jsx';
 
 const CMSAuth = () => {
   const [email, setEmail] = useState('');
@@ -75,7 +75,7 @@ const CMSAuth = () => {
             Logout
           </button>
         </div>
-        <CMSDashboard />
+        <VISUAL_CMS_Dashboard />
       </div>
     );
   }
