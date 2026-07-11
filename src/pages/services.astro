@@ -1,0 +1,606 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent, getContentValue } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('services');
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://newmediatek.net/services" }
+  ]
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Enterprise .NET Development",
+  "provider": {
+    "@type": "Organization",
+    "name": "New Media Tek",
+    "url": "https://newmediatek.net"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": ".NET Development Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Custom .NET Applications",
+          "description": "Enterprise-grade ASP.NET Core and MVC solutions built with proven N-tier architecture patterns."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "REST APIs & Microservices",
+          "description": "Scalable gRPC and RESTful services with advanced caching strategies using Redis."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Legacy Modernization",
+          "description": "Upgrade .NET Framework 2.0-4.8 applications to modern .NET 10 with EF Core 10 optimization."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "UX/UI Design & Frontend",
+          "description": "Modern, responsive interfaces built with React 19, Angular 21, and Blazor. We bridge the gap between complex enterprise logic and intuitive user experiences."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cloud Infrastructure & DevOps",
+          "description": "Robust CI/CD pipelines and cloud infrastructure management. We ensure your applications are deployed securely with Azure Functions, AWS Lambda, Docker/Kubernetes for high-availability systems."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cloud Data Migration",
+          "description": "Seamless migration of on-premises databases and data warehouses to cloud platforms. Zero-downtime transitions with comprehensive data integrity validation."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cloud Platform Integrations",
+          "description": "Deep expertise in AWS and Azure cloud services integration. Building scalable, secure cloud-native applications with EC2, S3, RDS, Lambda, Azure SQL, and Functions."
+        }
+      }
+    ]
+  }
+};
+---
+
+<BaseLayout title=".NET Development Services | Cloud DevOps & UX/UI | US Agency" description="Enterprise .NET development, Cloud DevOps, UX/UI design. Custom apps, APIs, legacy modernization. Senior Architect-led. Get your free project assessment!">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([breadcrumbSchema, schema])} />
+
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', 'Enterprise-Grade .NET Solutions')}
+      </div>
+
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', '.NET Development')}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'Services')}</span>
+      </h1>
+
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Led by a Senior .NET Architect with Fortune 500 experience. We deliver enterprise-grade applications, APIs, and modernization solutions with AI-accelerated development.')}
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <a href="/contact" class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          Start Your Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+        <a href="/process" class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <i data-lucide="settings" class="w-4 h-4"></i> Our Process
+        </a>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+
+      <!-- Custom Applications -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mb-6 border group-hover:border-blue-500/30 transition-colors border-white/5">
+          <i data-lucide="code-2" class="w-6 h-6 text-blue-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Custom .NET Applications</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">Core Service</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Enterprise-grade ASP.NET Core and MVC solutions built with proven N-tier architecture patterns. Scalable applications designed for Fortune 500 environments with comprehensive security and performance optimization.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+            <span class="text-sm text-slate-300">ASP.NET Core MVC</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+            <span class="text-sm text-slate-300">EF Core 10 Integration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+            <span class="text-sm text-slate-300">Windows Server & IIS Deployment</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+            <span class="text-sm text-slate-300">React 19 Frontend Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- REST APIs -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mb-6 border group-hover:border-cyan-500/30 transition-colors border-white/5">
+          <i data-lucide="network" class="w-6 h-6 text-cyan-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">REST APIs & Microservices</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">High Demand</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Scalable gRPC and RESTful services with advanced caching strategies using Redis. High-performance APIs designed for enterprise integration with comprehensive security and monitoring capabilities.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+            <span class="text-sm text-slate-300">gRPC Services</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+            <span class="text-sm text-slate-300">RESTful API Design & Development</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+            <span class="text-sm text-slate-300">Redis Caching Implementation</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+            <span class="text-sm text-slate-300">API Security & Authentication</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legacy Modernization -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mb-6 border group-hover:border-indigo-500/30 transition-colors border-white/5">
+          <i data-lucide="rocket" class="w-6 h-6 text-indigo-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Legacy Modernization</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-purple-400 bg-purple-400/10 border-purple-400/20">Specialty</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Upgrade .NET Framework 2.0-4.8 applications to modern .NET 10 with EF Core 10 optimization and modern frontend integration. Seamless migration paths that preserve business logic while enhancing performance.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+            <span class="text-sm text-slate-300">.NET Framework to .NET 10 Migration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+            <span class="text-sm text-slate-300">Database Modernization</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+            <span class="text-sm text-slate-300">Legacy Code Refactoring</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+            <span class="text-sm text-slate-300">Performance Optimization</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enterprise Architecture -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-6 border group-hover:border-purple-500/30 transition-colors border-white/5">
+          <i data-lucide="building" class="w-6 h-6 text-purple-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Enterprise Architecture</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-orange-400 bg-orange-400/10 border-orange-400/20">Advanced</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Comprehensive enterprise architecture design including system integration, scalability planning, and governance frameworks. Solutions built for Fortune 500 scale with future-proof technology stacks.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+            <span class="text-sm text-slate-300">System Architecture Design</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+            <span class="text-sm text-slate-300">Integration Patterns & ESB</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+            <span class="text-sm text-slate-300">Scalability & Performance Planning</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+            <span class="text-sm text-slate-300">Enterprise Security Frameworks</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- UX/UI Design & Frontend -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center mb-6 border group-hover:border-pink-500/30 transition-colors border-white/5">
+          <i data-lucide="layout" class="w-6 h-6 text-pink-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">UX/UI Design & Frontend</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">Modern UI</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Modern, responsive interfaces built with React 19, Angular 21, and Blazor. We bridge the gap between complex enterprise logic and intuitive user experiences, designing for efficiency and accessibility.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>
+            <span class="text-sm text-slate-300">React 19, Angular 21, Blazor Development</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>
+            <span class="text-sm text-slate-300">Enterprise Design Systems</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>
+            <span class="text-sm text-slate-300">Figma Prototyping</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>
+            <span class="text-sm text-slate-300">Responsive Enterprise Dashboards</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Infrastructure & DevOps -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-6 border group-hover:border-emerald-500/30 transition-colors border-white/5">
+          <i data-lucide="cloud" class="w-6 h-6 text-emerald-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Cloud Infrastructure & DevOps</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">Operations</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Robust CI/CD pipelines and cloud infrastructure management. We ensure your applications are deployed securely with Azure Functions, AWS Lambda, Docker/Kubernetes for high-availability systems.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">Azure Functions & AWS Lambda</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">Docker & Kubernetes Orchestration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">Azure App Service & AWS EC2</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">Automated CI/CD Pipelines</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">Infrastructure as Code (IaC)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-sm text-slate-300">24/7 Monitoring & Alerting</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Data Migration -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center mb-6 border group-hover:border-amber-500/30 transition-colors border-white/5">
+          <i data-lucide="database" class="w-6 h-6 text-amber-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Cloud Data Migration</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-amber-400 bg-amber-400/10 border-amber-400/20">Specialty</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Seamless migration of on-premises databases and data warehouses to cloud platforms. We ensure zero-downtime transitions with comprehensive data integrity validation.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+            <span class="text-sm text-slate-300">On-Premises to Cloud Migration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+            <span class="text-sm text-slate-300">AWS Database Migration Service (DMS)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+            <span class="text-sm text-slate-300">Azure Data Migration Service</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+            <span class="text-sm text-slate-300">Data Lake & Warehouse Migration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Platform Integrations -->
+      <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-6 border group-hover:border-red-500/30 transition-colors border-white/5">
+          <i data-lucide="cloud" class="w-6 h-6 text-red-300"></i>
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <h3 class="text-xl font-semibold text-white">Cloud Platform Integrations</h3>
+          <span class="text-[10px] px-2 py-1 rounded-full border text-red-400 bg-red-400/10 border-red-400/20">Advanced</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Deep expertise in AWS and Azure cloud services integration. We build scalable, secure cloud-native applications leveraging the full power of enterprise cloud platforms.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            <span class="text-sm text-slate-300">AWS Services: EC2, S3, RDS, Lambda, EKS</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            <span class="text-sm text-slate-300">Azure Services: App Service, Azure SQL, Functions, AKS</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            <span class="text-sm text-slate-300">Serverless Architecture (Lambda/Azure Functions)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            <span class="text-sm text-slate-300">Multi-Cloud Strategy & Management</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Advanced Data Solutions -->
+    <section class="mt-24">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Advanced Data Solutions</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          .NET-native data capabilities powered by ML.NET and modern analytics. Transform your enterprise applications with intelligent data processing and insights.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <!-- ML.NET Integration -->
+        <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-6 border group-hover:border-violet-500/30 transition-colors border-white/5">
+            <i data-lucide="brain" class="w-6 h-6 text-violet-300"></i>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <h3 class="text-xl font-semibold text-white">ML.NET Integration</h3>
+            <span class="text-[10px] px-2 py-1 rounded-full border text-violet-400 bg-violet-400/10 border-violet-400/20">Machine Learning</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mb-6">
+            Native .NET machine learning with ML.NET 5.0, complemented by Python for rapid prototyping and specialized ML workflows. Build predictive models and intelligent features within your .NET applications.
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-violet-400"></div>
+              <span class="text-sm text-slate-300">ML.NET 5.0 Predictive Models</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-violet-400"></div>
+              <span class="text-sm text-slate-300">Python ML Prototyping & Integration</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-violet-400"></div>
+              <span class="text-sm text-slate-300">Deep Learning with TorchSharp & PyTorch</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-violet-400"></div>
+              <span class="text-sm text-slate-300">Natural Language Processing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Power BI Analytics -->
+        <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center mb-6 border group-hover:border-amber-500/30 transition-colors border-white/5">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-amber-300"></i>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <h3 class="text-xl font-semibold text-white">Power BI Analytics</h3>
+            <span class="text-[10px] px-2 py-1 rounded-full border text-amber-400 bg-amber-400/10 border-amber-400/20">Business Intelligence</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mb-6">
+            Embedded Power BI dashboards and analytics within .NET applications. Real-time business intelligence and interactive reporting for enterprise decision-making.
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+              <span class="text-sm text-slate-300">Power BI Embedded Analytics</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+              <span class="text-sm text-slate-300">Interactive .NET Dashboards</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+              <span class="text-sm text-slate-300">Real-time Data Visualization</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+              <span class="text-sm text-slate-300">Custom Report Development</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Data Architecture -->
+        <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-6 border group-hover:border-emerald-500/30 transition-colors border-white/5">
+            <i data-lucide="git-branch" class="w-6 h-6 text-emerald-300"></i>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <h3 class="text-xl font-semibold text-white">Advanced Data Architecture</h3>
+            <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">Foundation</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mb-6">
+            Scalable data architectures built on EF Core 10 and .NET data pipelines, with Python for ETL scripting and data transformation. Enterprise-scale analytics and performance optimization.
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm text-slate-300">EF Core 10 Advanced Modeling</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm text-slate-300">.NET & Python Data Pipelines</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm text-slate-300">Performance Optimization</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm text-slate-300">Data Governance & Security</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Migration & Modernization -->
+        <div class="glass-card rounded-2xl p-8 hover:-translate-y-1 transition-transform group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-6 border group-hover:border-blue-500/30 transition-colors border-white/5">
+            <i data-lucide="arrow-right-left" class="w-6 h-6 text-blue-300"></i>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <h3 class="text-xl font-semibold text-white">Data Migration & Modernization</h3>
+            <span class="text-[10px] px-2 py-1 rounded-full border text-blue-400 bg-blue-400/10 border-blue-400/20">Migration</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mb-6">
+            Seamless data migration using .NET-native tools. Modernize legacy data systems with automated transformation, validation, and zero-downtime processes.
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+              <span class="text-sm text-slate-300">Automated ETL with .NET</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+              <span class="text-sm text-slate-300">Schema Mapping & Validation</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+              <span class="text-sm text-slate-300">Zero-Downtime Migration</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+              <span class="text-sm text-slate-300">Data Quality Assurance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technology Stack Section -->
+    <section class="mt-24 border-t pt-16 border-white/5">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Technology Expertise</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Deep experience across the full .NET ecosystem and enterprise technologies
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-6">
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-blue-400 mb-2">.NET</div>
+          <div class="text-xs text-slate-400">Framework 2.0-4.8, 10</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-cyan-400 mb-2">ASP.NET</div>
+          <div class="text-xs text-slate-400">Core MVC</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-purple-400 mb-2">EF Core</div>
+          <div class="text-xs text-slate-400">10</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-yellow-400 mb-2">Python</div>
+          <div class="text-xs text-slate-400">Data & ML</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-indigo-400 mb-2">gRPC</div>
+          <div class="text-xs text-slate-400">Modern Services</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-emerald-400 mb-2">Redis</div>
+          <div class="text-xs text-slate-400">Caching Layer</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-orange-400 mb-2">Angular</div>
+          <div class="text-xs text-slate-400">21</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-violet-400 mb-2">ML.NET</div>
+          <div class="text-xs text-slate-400">5.0</div>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+          <div class="text-2xl font-bold text-amber-400 mb-2">Power BI</div>
+          <div class="text-xs text-slate-400">Embedded</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>
+
+      <h2 class="text-3xl md:text-4xl font-medium mb-6 relative z-10 text-white">Ready to enhance your .NET applications with data?</h2>
+      <p class="max-w-xl mx-auto mb-8 relative z-10 text-slate-400">
+        Work with a Senior .NET Architect and Data Solutions Developer. Enterprise .NET development enhanced with advanced data analytics and ML.NET capabilities.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+        <a href="/contact" class="px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200">
+          Discuss Your Project
+        </a>
+        <a href="/portfolio" class="px-6 py-3 rounded-lg border text-sm font-medium transition-colors border-white/10 bg-white/5 text-white hover:bg-white/10">
+          View Our Work
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

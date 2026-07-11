@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig, getEmailLink } from '../config/site';
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Contracts & Vendor Info", "item": "https://newmediatek.net/contracts" }
+  ]
+};
+---
+
+<BaseLayout
+  title="Contracts & Vendor Information | New Media Tek"
+  description="New Media Tek is available for government and corporate vendor onboarding. Access our capabilities statement, W-9, insurance, and compliance documentation."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+
+    <section class="text-center max-w-4xl mx-auto mb-16 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        Contract Ready
+      </div>
+
+      <h1 class="md:text-6xl lg:text-7xl leading-[1.1] text-4xl font-medium text-white tracking-tight mb-8">
+        Contracts &
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">Vendor Information</span>
+      </h1>
+
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        New Media Tek is available for government and corporate vendor onboarding. 
+        We maintain current documentation and are ready to support your procurement process.
+      </p>
+    </section>
+
+    <!-- Vendor Ready Status -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="glass-card rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="check-circle" class="w-6 h-6 text-green-400"></i>
+        </div>
+        <h3 class="text-white font-medium mb-2">Registered Business</h3>
+        <p class="text-slate-400 text-sm">LLC in good standing with valid EIN</p>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="check-circle" class="w-6 h-6 text-green-400"></i>
+        </div>
+        <h3 class="text-white font-medium mb-2">Insurance Coverage</h3>
+        <p class="text-slate-400 text-sm">Professional Liability & General Liability</p>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="check-circle" class="w-6 h-6 text-green-400"></i>
+        </div>
+        <h3 class="text-white font-medium mb-2">Documentation Ready</h3>
+        <p class="text-slate-400 text-sm">W-9, COI, and compliance docs available</p>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+
+      <!-- Capabilities Statement -->
+      <div class="glass-card rounded-2xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+            <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <h2 class="text-xl font-semibold text-white">Capabilities Statement</h2>
+        </div>
+        
+        <p class="text-slate-400 text-sm mb-6">
+          Download our one-page capabilities statement for your procurement records. 
+          Includes services, experience, and contact information.
+        </p>
+
+        <a href="/capabilities-statement" 
+           target="_blank"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-600 text-white text-sm font-medium hover:bg-blue-500 transition-colors">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          View Capabilities Statement
+        </a>
+      </div>
+
+      <!-- Available Documentation -->
+      <div class="glass-card rounded-2xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+            <i data-lucide="folder-open" class="w-5 h-5 text-cyan-400"></i>
+          </div>
+          <h2 class="text-xl font-semibold text-white">Available Upon Request</h2>
+        </div>
+        
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-3 text-slate-300">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            W-9 Tax Form
+          </li>
+          <li class="flex items-center gap-3 text-slate-300">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            Certificate of Insurance (COI)
+          </li>
+          <li class="flex items-center gap-3 text-slate-300">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            Business Registration Documents
+          </li>
+          <li class="flex items-center gap-3 text-slate-300">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            Banking Information for ACH/Wire
+          </li>
+          <li class="flex items-center gap-3 text-slate-300">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            Master Service Agreement (MSA) Templates
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Services Overview -->
+    <div class="glass-card rounded-2xl p-8 mb-16">
+      <h2 class="text-2xl font-semibold text-white mb-6">Core Capabilities</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">Custom .NET Applications</h3>
+          <p class="text-slate-400 text-sm">Enterprise-grade software built on Microsoft .NET ecosystem</p>
+        </div>
+        
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">REST API Development</h3>
+          <p class="text-slate-400 text-sm">Scalable, secure API architecture and implementation</p>
+        </div>
+        
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">Legacy Modernization</h3>
+          <p class="text-slate-400 text-sm">Migration from legacy systems to modern .NET platforms</p>
+        </div>
+        
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">Enterprise Architecture</h3>
+          <p class="text-slate-400 text-sm">System design, technical strategy, and architecture consulting</p>
+        </div>
+        
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">UX/UI Design</h3>
+          <p class="text-slate-400 text-sm">User experience design with Angular, Blazor, and modern frontends</p>
+        </div>
+        
+        <div class="border border-white/10 rounded-xl p-5">
+          <h3 class="text-white font-medium mb-2">Cloud & DevOps</h3>
+          <p class="text-slate-400 text-sm">Azure infrastructure, CI/CD pipelines, and deployment automation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact for Contracts -->
+    <div class="glass-card rounded-2xl p-8 text-center">
+      <h2 class="text-2xl font-semibold text-white mb-4">Procurement Contact</h2>
+      <p class="text-slate-400 mb-6 max-w-xl mx-auto">
+        For vendor onboarding, documentation requests, or contract inquiries, 
+        please contact us directly.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href={getEmailLink()} 
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-slate-200 transition-colors">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          {siteConfig.contact.email.display}
+        </a>
+        <a href="/contact" 
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-slate-700 text-slate-300 text-sm font-medium hover:border-slate-500 hover:text-white transition-colors">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          Schedule a Call
+        </a>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

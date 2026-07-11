@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../config/site';
+
+// Static blog posts data (Phase 1)
+const posts = [
+  {
+    slug: 'ef-core-10-performance-tips',
+    title: 'Entity Framework Core 10 Performance Optimization',
+    excerpt: 'Discover advanced techniques for maximizing EF Core 10 performance in enterprise applications. Learn query optimization, caching strategies, and N-tier best practices.',
+    category: 'Database',
+    readTime: '4 min',
+    publishDate: '2026-01-13',
+    featured: true,
+    image: '/images/og-default.png'
+  },
+  {
+    slug: 'migrating-wcf-to-grpc-dotnet-9',
+    title: 'Migrating WCF Services to gRPC in .NET 10',
+    excerpt: 'Complete guide for modernizing WCF services to gRPC. Step-by-step migration strategy, performance comparisons, and enterprise deployment patterns.',
+    category: 'Architecture',
+    readTime: '5 min',
+    publishDate: '2026-01-12',
+    featured: true,
+    image: '/images/og-default.png'
+  },
+  {
+    slug: 'ai-augmented-dotnet-development',
+    title: 'AI-Augmented .NET Development: Best Practices',
+    excerpt: 'How Senior .NET Architects leverage AI tools for 40% faster delivery. Learn code generation patterns, automated testing, and quality assurance strategies.',
+    category: 'AI & Development',
+    readTime: '4 min',
+    publishDate: '2026-01-11',
+    featured: false,
+    image: '/images/og-default.png'
+  },
+  {
+    slug: 'legacy-dotnet-modernization-guide',
+    title: 'Legacy .NET Framework Modernization Guide',
+    excerpt: 'Strategic approach to upgrading .NET Framework 2.0-4.8 applications to .NET 10. Preserve business logic while gaining modern performance and security.',
+    category: 'Modernization',
+    readTime: '5 min',
+    publishDate: '2026-01-10',
+    featured: false,
+    image: '/images/og-default.png'
+  }
+];
+
+// Schema.org data for insights listing
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "New Media Tek Insights",
+  "description": "Enterprise .NET development insights, tutorials, and best practices from Senior .NET Architects.",
+  "url": "https://newmediatek.net/insights",
+  "publisher": {
+    "@type": "Organization",
+    "name": "New Media Tek",
+    "url": "https://newmediatek.net",
+    "logo": "https://newmediatek.net/images/logo-icon.png"
+  },
+  "blogPost": posts.map(post => ({
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "url": `https://newmediatek.net/insights/${post.slug}`,
+    "datePublished": post.publishDate,
+    "author": {
+      "@type": "Organization",
+      "name": "New Media Tek"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "New Media Tek"
+    }
+  }))
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Insights", "item": "https://newmediatek.net/insights" }
+  ]
+};
+---
+
+<BaseLayout 
+  title="Enterprise .NET Insights | New Media Tek" 
+  description="Senior .NET Architect insights on Entity Framework Core 10, WCF to gRPC migration, AI-augmented development, and legacy modernization strategies."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([schema, breadcrumbSchema])} />
+  
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+
+    <!-- Header Section -->
+    <section class="mb-16 animate-up">
+      <h1 class="text-4xl md:text-5xl font-medium text-white tracking-tight mb-6">
+        Enterprise .NET Insights
+      </h1>
+      <p class="text-xl text-slate-400 leading-relaxed max-w-3xl">
+        Senior .NET Architect perspectives on modernizing enterprise applications, 
+        leveraging AI acceleration, and implementing scalable .NET 10 solutions.
+      </p>
+    </section>
+
+    <!-- Featured Post -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold text-white mb-8">Featured Insight</h2>
+      {posts.filter(post => post.featured).slice(0, 1).map(post => (
+        <article class="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-8 border border-white/10 hover:border-blue-500/30 transition-all duration-300">
+          <div class="flex flex-col lg:flex-row gap-8">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full">
+                  {post.category}
+                </span>
+                <span class="text-slate-400 text-sm">{post.readTime} read</span>
+                <span class="text-slate-400 text-sm">{post.publishDate}</span>
+              </div>
+              <h3 class="text-2xl font-semibold text-white mb-4 hover:text-blue-300 transition-colors">
+                <a href={`/insights/${post.slug}`}>{post.title}</a>
+              </h3>
+              <p class="text-slate-300 leading-relaxed mb-6">{post.excerpt}</p>
+              <a href={`/insights/${post.slug}`} class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                Read Full Article
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <!-- All Posts Grid -->
+    <section>
+      <h2 class="text-2xl font-semibold text-white mb-8">All Insights</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        {posts.map(post => (
+          <article class="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-blue-500/30 transition-all duration-300 hover:transform hover:scale-[1.02]">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full">
+                {post.category}
+              </span>
+              <span class="text-slate-400 text-sm">{post.readTime}</span>
+              <span class="text-slate-400 text-sm">{post.publishDate}</span>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-3 hover:text-blue-300 transition-colors">
+              <a href={`/insights/${post.slug}`}>{post.title}</a>
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-4">{post.excerpt}</p>
+            <a href={`/insights/${post.slug}`} class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors">
+              Read More
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

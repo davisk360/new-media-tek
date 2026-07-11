@@ -1,0 +1,328 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capabilities Statement | New Media Tek - Enterprise .NET Development</title>
+  <meta name="description" content="New Media Tek capabilities statement for government and corporate procurement. Senior .NET Architect-led team specializing in custom .NET development, cloud DevOps, and legacy modernization.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://newmediatek.net/capabilities-statement">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Capabilities Statement | New Media Tek">
+  <meta property="og:description" content="New Media Tek capabilities statement for government and corporate procurement. Senior .NET Architect-led enterprise development.">
+  <meta property="og:url" content="https://newmediatek.net/capabilities-statement">
+  <meta property="og:image" content="https://newmediatek.net/images/og-default.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Capabilities Statement | New Media Tek">
+  <meta name="twitter:description" content="New Media Tek capabilities statement for government and corporate procurement.">
+  <style>
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .no-print { display: none !important; }
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: white;
+      color: #1a1a2e;
+      line-height: 1.5;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .logo-section h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    
+    .logo-section .tagline {
+      font-size: 12px;
+      color: #2563eb;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .contact-info {
+      text-align: right;
+      font-size: 11px;
+      color: #4a5568;
+    }
+    
+    .contact-info a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    
+    .section {
+      margin-bottom: 18px;
+    }
+    
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      background: #2563eb;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .section-content {
+      font-size: 11px;
+      color: #374151;
+      padding: 0 8px;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .three-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    
+    ul {
+      padding-left: 16px;
+    }
+    
+    li {
+      margin-bottom: 4px;
+    }
+    
+    .highlight-box {
+      background: #f0f7ff;
+      border-left: 3px solid #2563eb;
+      padding: 10px 12px;
+      margin: 8px 0;
+    }
+    
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+    }
+    
+    .stat-box .number {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2563eb;
+    }
+    
+    .stat-box .label {
+      font-size: 9px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+    
+    .service-tag {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      margin: 2px;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 9px;
+      color: #64748b;
+      text-align: center;
+    }
+    
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .print-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+  <div class="header">
+    <div class="logo-section">
+      <h1>New Media Tek</h1>
+      <div class="tagline">Enterprise .NET Development, AI-Accelerated</div>
+    </div>
+    <div class="contact-info">
+      <strong>New Media Tek LLC</strong><br>
+      <a href="https://newmediatek.net">newmediatek.net</a><br>
+      <a href="mailto:{siteConfig.contact.email.display}">{siteConfig.contact.email.display}</a><br>
+      {siteConfig.contact.phone.display}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Company Overview</div>
+    <div class="section-content">
+      <p>New Media Tek is a Senior-Led software development firm specializing in enterprise .NET solutions. 
+      Led by an architect with 15+ years of Fortune 500 experience, we deliver AI-augmented development 
+      services that modernize legacy systems, build scalable APIs, and accelerate digital transformation.</p>
+      
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="number">15+</div>
+          <div class="label">Years Experience</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">4</div>
+          <div class="label">Team Members</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">500</div>
+          <div class="label">Fortune 500 Projects</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">24/7</div>
+          <div class="label">Support Available</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-column">
+    <div class="section">
+      <div class="section-title">Core Services</div>
+      <div class="section-content">
+        <ul>
+          <li><strong>Custom .NET Applications</strong> — Enterprise-grade software on ASP.NET Core, .NET 10</li>
+          <li><strong>REST API Development</strong> — Scalable, secure API architecture with Entity Framework</li>
+          <li><strong>Legacy Modernization</strong> — Migration from .NET Framework to modern .NET 10</li>
+          <li><strong>Enterprise Architecture</strong> — System design, technical strategy, N-tier architecture</li>
+          <li><strong>UX/UI Development</strong> — Angular 21, Blazor, React frontends with modern design</li>
+          <li><strong>Cloud & DevOps</strong> — Azure, CI/CD pipelines, containerization</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Technical Expertise</div>
+      <div class="section-content">
+        <div style="margin-bottom: 8px;">
+          <span class="service-tag">.NET 10</span>
+          <span class="service-tag">ASP.NET MVC</span>
+          <span class="service-tag">Entity Framework</span>
+          <span class="service-tag">REST APIs</span>
+          <span class="service-tag">WCF</span>
+          <span class="service-tag">Angular</span>
+          <span class="service-tag">Blazor</span>
+          <span class="service-tag">TypeScript</span>
+          <span class="service-tag">Azure</span>
+          <span class="service-tag">SQL Server</span>
+          <span class="service-tag">Redis</span>
+          <span class="service-tag">Docker</span>
+          <span class="service-tag">CI/CD</span>
+          <span class="service-tag">AI Integration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Differentiators</div>
+    <div class="section-content">
+      <div class="three-column">
+        <div class="highlight-box">
+          <strong>Senior-Led Team</strong><br>
+          Every project led by architects, not junior developers. Direct access to decision-makers.
+        </div>
+        <div class="highlight-box">
+          <strong>AI-Augmented Development</strong><br>
+          Leveraging AI tools to accelerate delivery while maintaining enterprise-grade quality.
+        </div>
+        <div class="highlight-box">
+          <strong>Fortune 500 Experience</strong><br>
+          Proven track record with enterprise clients requiring security, scalability, and compliance.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-column">
+    <div class="section">
+      <div class="section-title">Past Performance</div>
+      <div class="section-content">
+        <ul>
+          <li>Enterprise application modernization for Fortune 500 financial services</li>
+          <li>REST API architecture for high-volume transaction processing</li>
+          <li>Legacy WCF to modern .NET Core migration projects</li>
+          <li>Real-time data integration systems with Redis caching</li>
+          <li>Azure cloud infrastructure and DevOps automation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Business Information</div>
+      <div class="section-content">
+        <ul>
+          <li><strong>Business Type:</strong> LLC</li>
+          <li><strong>Size:</strong> Small Business (4 employees)</li>
+          <li><strong>Service Area:</strong> United States (Remote)</li>
+          <li><strong>Insurance:</strong> Professional Liability, General Liability</li>
+          <li><strong>Documentation:</strong> W-9, COI available upon request</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>New Media Tek LLC</strong> | newmediatek.net | {siteConfig.contact.email.display} | {siteConfig.contact.phone.display}
+    <br>
+    Enterprise .NET Development, AI-Accelerated
+  </div>
+</body>
+</html>

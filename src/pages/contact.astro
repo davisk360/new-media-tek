@@ -1,0 +1,301 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig, getPhoneLink, getEmailLink } from '../config/site';
+import { getPageContent, getContentValue } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('contact');
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://newmediatek.net/contact" }
+  ]
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "New Media Tek",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": siteConfig.seo.telephone,
+      "contactType": siteConfig.seo.contactType,
+      "availableLanguage": siteConfig.seo.availableLanguage
+    }
+  }
+};
+---
+
+<BaseLayout
+  title="Schedule .NET Consultation | New Media Tek"
+  description="Book a technical consultation with a Senior .NET Architect. Discuss your enterprise software needs, legacy modernization, or API strategy today."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([breadcrumbSchema, schema])} />
+
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', 'Start Your Project')}
+      </div>
+
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', "Let's Build")}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'Together')}</span>
+      </h1>
+
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Schedule a consultation with our Senior .NET Architect and Data Solutions Developer. Discuss your enterprise requirements and discover how AI-augmented development and advanced data analytics can accelerate your project.')}
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <a href="#consultation" class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          Schedule Consultation <i data-lucide="calendar" class="w-4 h-4"></i>
+        </a>
+        <a href={getPhoneLink()} class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <i data-lucide="phone" class="w-4 h-4"></i> Call Now
+        </a>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+
+      <!-- Contact Form -->
+      <div class="lg:col-span-2">
+        <div id="consultation" class="glass-card rounded-2xl p-8">
+          <h2 class="text-2xl font-semibold text-white mb-6">Schedule Your Consultation</h2>
+
+          <!-- Success Message -->
+          <div id="form-success" class="hidden mb-6 p-4 rounded-lg bg-green-500/20 border border-green-500/30 text-green-200">
+            Success message will appear here
+          </div>
+
+          <!-- Error Message -->
+          <div id="form-error" class="hidden mb-6 p-4 rounded-lg bg-red-500/20 border border-red-500/30 text-red-200">
+            Error message will appear here
+          </div>
+
+          <form class="space-y-6" id="consultationForm" name="consultation">
+            <input type="hidden" name="form-name" value="consultation" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-slate-300 mb-2">First Name *</label>
+                <input type="text" id="firstName" name="firstName" required
+                  class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  placeholder="John">
+              </div>
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-slate-300 mb-2">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" required
+                  class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  placeholder="Doe">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Business Email *</label>
+                <input type="email" id="email" name="email" required
+                  class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  placeholder="john@company.com">
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
+                <input type="tel" id="phone" name="phone"
+                  class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  placeholder="+1 (555) 123-4567">
+              </div>
+            </div>
+
+            <div>
+              <label for="company" class="block text-sm font-medium text-slate-300 mb-2">Company *</label>
+              <input type="text" id="company" name="company" required
+                class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                placeholder="Acme Corporation">
+            </div>
+
+            <div>
+              <label for="projectType" class="block text-sm font-medium text-slate-300 mb-2">Project Type *</label>
+              <select id="projectType" name="projectType" required
+                class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                <option value="" class="bg-slate-800 text-white">Select a project type</option>
+                <option value="custom-application" class="bg-slate-800 text-white">Custom .NET Application</option>
+                <option value="rest-api" class="bg-slate-800 text-white">REST API / Microservices</option>
+                <option value="legacy-modernization" class="bg-slate-800 text-white">Legacy Modernization</option>
+                <option value="data-solutions" class="bg-slate-800 text-white">Advanced Data Solutions</option>
+                <option value="enterprise-architecture" class="bg-slate-800 text-white">Enterprise Architecture</option>
+                <option value="ux-frontend" class="bg-slate-800 text-white">UX/UI Design & Frontend</option>
+                <option value="cloud-devops" class="bg-slate-800 text-white">Cloud Infrastructure & DevOps</option>
+                <option value="consulting" class="bg-slate-800 text-white">Technical Consulting</option>
+                <option value="other" class="bg-slate-800 text-white">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="timeline" class="block text-sm font-medium text-slate-300 mb-2">Project Timeline</label>
+              <select id="timeline" name="timeline"
+                class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                <option value="" class="bg-slate-800 text-white">Select timeline</option>
+                <option value="urgent" class="bg-slate-800 text-white">Urgent (1-2 months)</option>
+                <option value="standard" class="bg-slate-800 text-white">Standard (3-6 months)</option>
+                <option value="flexible" class="bg-slate-800 text-white">Flexible (6+ months)</option>
+                <option value="exploring" class="bg-slate-800 text-white">Just exploring options</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Project Details *</label>
+              <textarea id="message" name="message" rows="4" required
+                class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+                placeholder="Tell us about your project requirements, challenges, and goals..."></textarea>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <input type="checkbox" id="newsletter" name="newsletter"
+                class="mt-1 w-4 h-4 rounded bg-white/5 border-white/10 text-blue-500 focus:ring-blue-500 focus:ring-1">
+              <label for="newsletter" class="text-sm text-slate-400">
+                Send me .NET development insights and company updates
+              </label>
+            </div>
+
+            <button type="submit"
+              class="w-full h-12 px-6 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200 flex items-center justify-center gap-2">
+              Schedule Consultation <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="space-y-6">
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Get in Touch</h3>
+          <div class="space-y-4">
+            <a href={getPhoneLink()} class="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
+              <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <i data-lucide="phone" class="w-5 h-5 text-blue-300"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Phone</div>
+                <div class="text-xs text-slate-400">{siteConfig.contact.phone.display}</div>
+              </div>
+            </a>
+
+            <a href={getEmailLink()} class="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
+              <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                <i data-lucide="mail" class="w-5 h-5 text-cyan-300"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Email</div>
+                <div class="text-xs text-slate-400">{siteConfig.contact.email.display}</div>
+              </div>
+            </a>
+
+            <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
+              <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                <i data-lucide="linkedin" class="w-5 h-5 text-indigo-300"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">LinkedIn</div>
+                <div class="text-xs text-slate-400">Connect with us</div>
+              </div>
+            </a>
+
+            <a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
+              <div class="w-10 h-10 rounded-lg bg-slate-500/20 flex items-center justify-center">
+                <i data-lucide="twitter" class="w-5 h-5 text-slate-300"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">X</div>
+                <div class="text-xs text-slate-400">Follow us</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Consultation Process</h3>
+          <div class="space-y-3">
+            <div class="flex gap-3">
+              <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-xs font-bold text-blue-300">1</span>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Initial Consultation</div>
+                <div class="text-xs text-slate-400">30-minute discovery call</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-xs font-bold text-blue-300">2</span>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Technical Assessment</div>
+                <div class="text-xs text-slate-400">Architecture & requirements analysis</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-xs font-bold text-blue-300">3</span>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Proposal & Timeline</div>
+                <div class="text-xs text-slate-400">Detailed project plan & pricing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Response Times</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-slate-300">Consultation Requests</span>
+              <span class="text-xs text-emerald-400">Within 24 hours</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-slate-300">Project Inquiries</span>
+              <span class="text-xs text-emerald-400">Within 48 hours</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-slate-300">Urgent Matters</span>
+              <span class="text-xs text-emerald-400">Same day</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Success Message (hidden by default) -->
+    <div id="successMessage" class="hidden glass-card rounded-2xl p-8 text-center border border-emerald-500/20 bg-emerald-500/10">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check-circle" class="w-8 h-8 text-emerald-300"></i>
+      </div>
+      <h3 class="text-xl font-semibold text-white mb-2">Consultation Request Received!</h3>
+      <p class="text-slate-400 mb-4">
+        Thank you for your interest. Our Senior .NET Architect will review your requirements and contact you within 24 hours to schedule your consultation.
+      </p>
+      <p class="text-sm text-slate-500">
+        For urgent matters, please call us directly at <a href={getPhoneLink()} class="text-emerald-400 hover:text-emerald-300">{siteConfig.contact.phone.display}</a>
+      </p>
+    </div>
+
+  </main>
+
+  <script>
+    import '../scripts/contact-form';
+  </script>
+  </div>
+</BaseLayout>

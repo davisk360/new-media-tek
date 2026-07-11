@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# AI Search Optimization
+Allow: /llms.txt
+
+Sitemap: https://newmediatek.net/sitemap-index.xml

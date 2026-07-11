@@ -1,0 +1,75 @@
+---
+// Footer component for reuse across all pages
+// Following Astro best practices for component structure
+import { siteConfig, getPhoneLink, getEmailLink } from '../config/site';
+---
+
+<footer class="border-t bg-[#02050e] pt-16 pb-8 border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <!-- Footer Links Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      <!-- Services Section -->
+      <div>
+        <h4 class="text-sm font-medium mb-4 text-white">Services</h4>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="/services" class="transition-colors hover:text-blue-400">Custom Applications</a></li>
+          <li><a href="/services" class="transition-colors hover:text-blue-400">REST APIs</a></li>
+          <li><a href="/services" class="transition-colors hover:text-blue-400">Legacy Modernization</a></li>
+          <li><a href="/services" class="transition-colors hover:text-blue-400">Enterprise Architecture</a></li>
+          <li><a href="/services" class="transition-colors hover:text-blue-400">UX/UI Design & Frontend</a></li>
+          <li><a href="/services" class="transition-colors hover:text-blue-400">Cloud Infrastructure & DevOps</a></li>
+        </ul>
+      </div>
+
+      <!-- Company Section -->
+      <div>
+        <h4 class="text-sm font-medium mb-4 text-white">Company</h4>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="/about" class="transition-colors hover:text-blue-400">About</a></li>
+          <li><a href="/portfolio" class="transition-colors hover:text-blue-400">Portfolio</a></li>
+          <li><a href="/process" class="transition-colors hover:text-blue-400">Process</a></li>
+          <li><a href="/contact" class="transition-colors hover:text-blue-400">Contact</a></li>
+          <li><a href="/contracts" class="transition-colors hover:text-blue-400">Contracts & Vendor Info</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Section -->
+      <div>
+        <h4 class="text-sm font-medium mb-4 text-white">Contact</h4>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="/contact" class="transition-colors hover:text-blue-400">Schedule Consultation</a></li>
+          <li><a href={getPhoneLink()} class="transition-colors hover:text-blue-400">{siteConfig.contact.phone.display}</a></li>
+          <li><a href={getEmailLink()} class="transition-colors hover:text-blue-400">{siteConfig.contact.email.display}</a></li>
+          <li><a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-blue-400">LinkedIn</a></li>
+          <li><a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-blue-400">X</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Section -->
+      <div>
+        <h4 class="text-sm font-medium mb-4 text-white">Legal</h4>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="/privacy" class="transition-colors hover:text-blue-400">Privacy Policy</a></li>
+          <li><a href="/terms" class="transition-colors hover:text-blue-400">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright Section -->
+    <div class="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4 border-white/5">
+      <div class="flex items-center gap-2">
+        <div class="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold bg-blue-600 text-white">NM</div>
+        <span class="text-xs text-slate-500">© {siteConfig.copyrightYear} {siteConfig.name}. All rights reserved.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-400 transition-colors" aria-label="LinkedIn">
+          <i data-lucide="linkedin" class="w-4 h-4"></i>
+        </a>
+        <a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-400 transition-colors" aria-label="X (Twitter)">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+        </a>
+        <span class="text-xs text-slate-500 font-mono">Enterprise .NET Development</span>
+      </div>
+    </div>
+  </div>
+</footer>

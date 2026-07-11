@@ -1,0 +1,299 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent, getContentValue } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('about');
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "About", "item": "https://newmediatek.net/about" }
+  ]
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "New Media Tek",
+    "founder": {
+      "@type": "Person",
+      "jobTitle": "Senior .NET Architect",
+      "description": "15+ years experience building enterprise solutions for Fortune 500 companies.",
+      "knowsAbout": [".NET Development", "Enterprise Architecture", "Cloud Infrastructure", "AI-Augmented Development"]
+    },
+    "description": "Senior-led team delivering enterprise .NET solutions with AI-augmented development.",
+    "numberOfEmployees": {
+      "@type": "QuantitativeValue",
+      "value": 4
+    }
+  }
+};
+---
+
+<BaseLayout 
+  title="About Our Senior .NET Architect Team | New Media Tek" 
+  description="Meet our senior-led team of experts. Uniting .NET Architects, Cloud Engineers, and UX Designers to deliver complete enterprise solutions with AI acceleration."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([breadcrumbSchema, schema])} />
+  
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+    
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', 'Senior-Led .NET Excellence')}
+      </div>
+      
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', 'Enterprise .NET')}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'Leadership')}</span>
+      </h1>
+      
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Led by a Senior .NET Architect with 15+ years building enterprise solutions for Fortune 500 companies. We deliver proven expertise with AI-accelerated development.')}
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <a href="#team" class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          Meet the Team <i data-lucide="users" class="w-4 h-4"></i>
+        </a>
+        <a href="/portfolio" class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <i data-lucide="briefcase" class="w-4 h-4"></i> View Our Work
+        </a>
+      </div>
+    </section>
+
+    <!-- Lead Architect Section -->
+    <section class="mb-24">
+      <div class="glass-card rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/5">
+                <i data-lucide="award" class="w-6 h-6 text-blue-300"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl font-semibold text-white">{c('architect_title', 'Senior .NET Architect')}</h2>
+                <p class="text-slate-400 text-sm">{c('architect_experience', '15+ Years Enterprise Experience')}</p>
+              </div>
+            </div>
+            
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-lg font-medium text-white mb-3">{c('architect_section_1_title', 'Fortune 500 Expertise')}</h3>
+                <p class="text-slate-400 leading-relaxed">
+                  {c('architect_section_1_desc', 'Designed and deployed enterprise-scale .NET solutions for Fortune 500 and Fortune 5000 corporations. Extensive experience in high-pressure IT environments with complex system requirements.')}
+                </p>
+              </div>
+              
+              <div>
+                <h3 class="text-lg font-medium text-white mb-3">{c('architect_section_2_title', 'Technical Leadership')}</h3>
+                <p class="text-slate-400 leading-relaxed">
+                  {c('architect_section_2_desc', 'Deep expertise in Windows Server environments, IIS deployment, and N-tier application architecture. Proven track record of delivering scalable, secure enterprise applications.')}
+                </p>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4 pt-4">
+                <div class="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div class="text-2xl font-bold text-blue-400 mb-1">{c('architect_stat_1_value', '15+')}</div>
+                  <div class="text-xs text-slate-400">{c('architect_stat_1_label', 'Years Experience')}</div>
+                </div>
+                <div class="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div class="text-2xl font-bold text-cyan-400 mb-1">{c('architect_stat_2_value', '500+')}</div>
+                  <div class="text-xs text-slate-400">{c('architect_stat_2_label', 'Fortune Projects')}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="relative">
+            <div class="glass-card rounded-2xl p-6 h-full">
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <i data-lucide="server" class="w-4 h-4 text-blue-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Windows Server Expertise</div>
+                    <div class="text-xs text-slate-400">IIS 6.0 & 7.5 deployment specialist</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <i data-lucide="layers" class="w-4 h-4 text-purple-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">N-Tier Architecture</div>
+                    <div class="text-xs text-slate-400">Enterprise application design patterns</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                    <i data-lucide="database" class="w-4 h-4 text-cyan-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">EF Core 10</div>
+                    <div class="text-xs text-slate-400">Advanced data layer optimization</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                    <i data-lucide="globe" class="w-4 h-4 text-indigo-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">gRPC Services</div>
+                    <div class="text-xs text-slate-400">Modern enterprise integration</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                    <i data-lucide="zap" class="w-4 h-4 text-emerald-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Redis Caching</div>
+                    <div class="text-xs text-slate-400">Performance optimization expert</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                    <i data-lucide="code" class="w-4 h-4 text-orange-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Frontend Development</div>
+                    <div class="text-xs text-slate-400">React 19, Angular 21, Blazor</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Structure -->
+    <section id="team" class="mb-24">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Senior-Led Team Structure</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Our lean, expert team ensures every project benefits from senior-level oversight and specialized skills
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="crown" class="w-8 h-8 text-blue-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Senior Architect</h3>
+          <p class="text-slate-400 text-sm mb-4">Leads architecture, codes critical components, ensures technical excellence</p>
+          <div class="text-xs text-blue-400 font-medium">Technical Leadership</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="database" class="w-8 h-8 text-cyan-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Data Solutions Developer</h3>
+          <p class="text-slate-400 text-sm mb-4">Advanced data analytics, ML.NET & Python ML integration, Power BI dashboards, data pipelines</p>
+          <div class="text-xs text-cyan-400 font-medium">Data & Analytics</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="palette" class="w-8 h-8 text-pink-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">UX/UI Developer</h3>
+          <p class="text-slate-400 text-sm mb-4">Designs user experiences, builds polished interfaces, ensures visual consistency</p>
+          <div class="text-xs text-pink-400 font-medium">Design & Frontend</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="settings" class="w-8 h-8 text-indigo-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">DevOps Specialist</h3>
+          <p class="text-slate-400 text-sm mb-4">Manages deployment, infrastructure, CI/CD pipelines, and monitoring</p>
+          <div class="text-xs text-indigo-400 font-medium">Operations Excellence</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Company Values -->
+    <section class="mb-24 border-t pt-16 border-white/5">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Our Values</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Principles that guide every project and client relationship
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="shield" class="w-6 h-6 text-blue-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Enterprise Security</h3>
+          <p class="text-slate-400 text-sm">Security-first approach for Fortune 500 standards</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="trending-up" class="w-6 h-6 text-cyan-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Scalability Focus</h3>
+          <p class="text-slate-400 text-sm">Built for enterprise growth and performance</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="cpu" class="w-6 h-6 text-indigo-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">AI-Augmented</h3>
+          <p class="text-slate-400 text-sm">Faster delivery without compromising quality</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="users" class="w-6 h-6 text-emerald-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Senior-Led Excellence</h3>
+          <p class="text-slate-400 text-sm">Expert oversight on every project</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>
+      
+      <h2 class="text-3xl md:text-4xl font-medium mb-6 relative z-10 text-white">Ready to work with enterprise .NET expertise?</h2>
+      <p class="max-w-xl mx-auto mb-8 relative z-10 text-slate-400">
+        Partner with a Senior .NET Architect who understands Fortune 500 requirements. Get the expertise your enterprise project deserves.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+        <a href="/contact" class="px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200">
+          Start Consultation
+        </a>
+        <a href="/services" class="px-6 py-3 rounded-lg border text-sm font-medium transition-colors border-white/10 bg-white/5 text-white hover:bg-white/10">
+          Our Services
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

@@ -1,0 +1,175 @@
+---
+// Base layout with shared header and footer
+// Following Astro best practices for layout structure
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import ChatWidget from '../components/ChatWidget.jsx';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const { 
+  title, 
+  description, 
+  image = '/images/og-default.png', // We'll need to ensure this exists or use a placeholder
+  type = 'website' 
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.url);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonicalURL} />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+
+  <!-- Favicon for SEO and browser compatibility -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/logo-icon.png">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content={type} />
+  <meta property="og:url" content={Astro.url} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={socialImageURL} />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={Astro.url} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content={socialImageURL} />
+  
+  <!-- Performance Optimization -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://cdn.userbird.com">
+  
+  <!-- Fonts with display=swap for better CLS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons - loaded async for better performance -->
+  <script src="https://unpkg.com/lucide@0.562.0/dist/umd/lucide.min.js" is:inline></script>
+  <ClientRouter />
+  <slot name="head" />
+  
+  <!-- Userbird Analytics -->
+  <script is:inline>
+    (function() {
+      window.userbirdq = window.userbirdq || [];
+      window.USERBIRD_SITE_ID = 'sOzikBJM';
+      var script = document.createElement('script');
+      script.defer = true;
+      script.setAttribute('data-site', window.USERBIRD_SITE_ID);
+      script.src = "https://cdn.userbird.com/analytics.min.js";
+      var currentScript = document.currentScript || document.getElementsByTagName('script')[0];
+      currentScript.parentNode.insertBefore(script, currentScript);
+    })();
+  </script>
+  
+  <style is:global>
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Apply animation to main content */
+    main {
+      animation: fadeInDown 0.6s ease-out forwards;
+    }
+
+    /* External link exit transition */
+    body.page-transition-fade-out {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-cyan-500/20 selection:text-cyan-200 z-10 relative">
+  
+  <!-- Background Elements -->
+  <div class="fixed z-0 top-0 right-0 bottom-0 left-0 pointer-events-none"></div>
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Header Component -->
+  <Header />
+
+  <!-- Mobile Menu Component -->
+  <MobileMenu />
+
+  <!-- Main Content -->
+  <main class="relative z-10">
+    <slot />
+  </main>
+
+  <!-- Footer Component -->
+  <Footer />
+
+  <!-- Chat Widget Component -->
+  <ChatWidget client:load />
+
+  <!-- Initialize Lucide Icons & Handle Transitions -->
+  <script>
+    // Module script: Runs once per session (SPA-like)
+    
+    // Re-initialize icons on every page navigation
+    document.addEventListener('astro:page-load', () => {
+      // @ts-ignore
+      if (typeof window.lucide !== 'undefined') {
+        // @ts-ignore
+        window.lucide.createIcons();
+      }
+    });
+
+    // Handle external link transitions - Attached once globally
+    document.addEventListener('click', (e) => {
+      // @ts-ignore
+      const link = e.target.closest('a');
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+      // Check if valid external link
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+      const target = link.getAttribute('target');
+      const isExternal = href.startsWith('http') && !href.includes(window.location.hostname);
+      
+      // Only animate if it's opening in the same tab (not _blank)
+      if (isExternal && target !== '_blank') {
+        e.preventDefault();
+        document.body.classList.add('page-transition-fade-out');
+        
+        setTimeout(() => {
+          window.location.href = href;
+        }, 400); // Match CSS transition duration
+      }
+    });
+  </script>
+</body>
+</html>

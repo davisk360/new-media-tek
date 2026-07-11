@@ -1,0 +1,638 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+import { getPageContent, getContentValue } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('home');
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": siteConfig.name,
+  "url": "https://newmediatek.net",
+  "logo": "https://newmediatek.net/images/logo-icon.png",
+  "description": "Enterprise .NET Development, AI-Accelerated - Senior .NET Architect led B2B software development company.",
+  "foundingDate": "2026",
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "value": 4
+  },
+  "slogan": "Enterprise .NET Development, AI-Accelerated",
+  "knowsAbout": [
+    ".NET Development",
+    "ASP.NET Core",
+    "Entity Framework",
+    "REST API Design",
+    "Microservices Architecture",
+    "Legacy Modernization",
+    "Cloud Infrastructure",
+    "Azure",
+    "AWS",
+    "React",
+    "Angular",
+    "Blazor",
+    "DevOps",
+    "CI/CD",
+    "Python",
+    "Machine Learning",
+    "Data Engineering"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "US"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": siteConfig.seo.telephone,
+    "contactType": siteConfig.seo.contactType,
+    "areaServed": siteConfig.contact.address.country,
+    "availableLanguage": siteConfig.seo.availableLanguage
+  },
+  "sameAs": [
+    siteConfig.social.linkedin,
+    siteConfig.social.twitter
+  ]
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteConfig.name,
+  "url": "https://newmediatek.net",
+  "description": "Enterprise .NET Development Agency - AI-Accelerated, Senior Architect Led",
+  "publisher": {
+    "@type": "Organization",
+    "name": siteConfig.name
+  }
+};
+
+const professionalServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "New Media Tek",
+  "description": "Enterprise .NET Development Agency specializing in custom applications, REST APIs, legacy modernization, and AI-augmented development.",
+  "url": "https://newmediatek.net",
+  "telephone": siteConfig.seo.telephone,
+  "priceRange": "$$$$",
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "serviceType": ["Custom .NET Development", "REST API Development", "Legacy Modernization", "Cloud DevOps", "ML.NET Integration", "Power BI Analytics"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Enterprise .NET Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom .NET Applications" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "REST APIs & Microservices" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Legacy .NET Modernization" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cloud Infrastructure & DevOps" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ML.NET & Data Analytics" } }
+    ]
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do you work with legacy .NET framework versions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we specialize in legacy modernization. We have deep expertise in .NET Framework versions 2.0 through 4.8 and help enterprises migrate to modern .NET 10 architectures with EF Core 10 while preserving critical business logic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does your AI-augmented development process work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We integrate advanced AI tools into our development workflow for code generation, automated testing, and pattern recognition. This allows our Senior Architects to deliver enterprise-grade software up to 40% faster without compromising security or quality."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does 'Senior-Led' mean for my project?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unlike agencies that rely on junior developers, every New Media Tek project is architected and actively led by a Senior .NET Architect with Fortune 500 experience. This ensures superior code quality, scalability, and long-term maintainability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can you handle high-scale enterprise applications?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Our team has built and deployed solutions for Fortune 500 companies handling millions of transactions. We specialize in N-tier architecture, distributed caching (Redis), and scalable cloud infrastructure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you handle frontend design and cloud hosting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. We are a full-service modernization partner. Beyond .NET backend, we provide comprehensive UX/UI Design (React 19, Angular 21, Blazor) and Cloud Infrastructure management (Azure Functions, AWS Lambda, Docker/Kubernetes, CI/CD) to deliver complete, production-ready solutions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What industries do you specialize in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We work across multiple industries including finance, healthcare, manufacturing, and retail. Our experience includes trading platforms, HIPAA-compliant systems, ERP solutions, and e-commerce platforms for Fortune 500 companies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How quickly can you start a new project?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We can typically begin within 1-2 weeks of project confirmation. Our AI-augmented onboarding process includes rapid architecture assessment, automated project setup, and dedicated team allocation to ensure fast project initiation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is your pricing model?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer flexible pricing models including fixed-price projects, time and materials, and dedicated team arrangements. During our initial consultation, we'll recommend the most cost-effective approach based on your project scope and requirements."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Enterprise .NET Development Agency | AI-Accelerated | US"
+  description="Senior .NET Architect-led agency. Custom .NET apps, Cloud DevOps (Azure/AWS), UX/UI design. AI-accelerated delivery for Fortune 500. Schedule consultation!"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([schema, websiteSchema, professionalServiceSchema, faqSchema])} />
+
+  <main class="max-w-7xl mr-auto ml-auto pt-32 pr-4 pl-4 sm:pr-6 sm:pl-6 pb-20 relative">
+
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', '15+ Years Enterprise Experience')}
+      </div>
+
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-4xl sm:text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', 'Enterprise .NET Development')}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'AI-Accelerated.')}</span>
+      </h1>
+
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Led by a Senior .NET Architect with Fortune 500 experience. Custom applications, REST APIs, and modernization delivered faster with AI-augmented development.')}
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <button class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          <a href="/contact" class="flex items-center gap-2">Schedule Consultation <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </button>
+        <button class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <a href="/services" class="flex items-center gap-2"><i data-lucide="terminal" class="w-4 h-4"></i> View Services</a>
+        </button>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 animate-up delay-200">
+
+      <div class="md:col-span-7 glass-card rounded-2xl p-0 overflow-hidden flex flex-col h-[400px]">
+        <div class="flex gap-2 h-10 border-white/5 border-b pr-4 pl-4 items-center">
+          <div class="flex gap-1.5">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-700/50"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-700/50"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-700/50"></div>
+          </div>
+          <span class="ml-2 text-[10px] text-slate-500 font-mono">Services/EnterpriseService.cs</span>
+        </div>
+
+        <div class="leading-6 overflow-hidden text-xs font-mono pt-6 pr-6 pb-6 pl-6 relative">
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#030712]/90 z-10 pointer-events-none"></div>
+          <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_rgba(52,211,153,0.15),_transparent_40%)]"></div>
+
+          <div class="flex gap-4 relative z-20">
+            <div class="text-right select-none text-slate-700 w-6 flex-shrink-0 leading-6 opacity-50">
+              1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16
+            </div>
+
+            <div class="flex-grow font-mono text-xs leading-6 w-full">
+              <div id="code-container"></div>
+              <span id="cursor" class="inline-block w-2 h-4 bg-emerald-500 cursor-blink"></span>
+            </div>
+          </div>
+
+          <div class="absolute bottom-6 right-6 z-30 bg-emerald-950/30 border border-emerald-500/20 backdrop-blur-md px-3 py-1.5 rounded-lg text-[10px] font-medium flex items-center gap-2 text-emerald-400 shadow-lg">
+            <i data-lucide="cpu" class="w-3 h-3 animate-[spin_3s_linear_infinite]"></i>
+            AI Generating...
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-5 glass-card rounded-2xl p-6 flex flex-col justify-between h-[400px]">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 rounded border bg-white/5 border-white/10 text-cyan-400">
+              <i data-lucide="users" class="w-4 h-4"></i>
+            </div>
+            <h3 class="text-sm font-medium text-white">Team Excellence</h3>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">AI-Enhanced</span>
+        </div>
+
+        <div class="flex-grow flex items-center justify-center py-4 relative">
+          <div class="relative w-48 h-48">
+            <!-- Outer Ring with Orbiting Ball -->
+            <div class="absolute inset-0 rounded-full border border-dashed animate-[spin_20s_linear_infinite] border-slate-700/50">
+              <div class="absolute top-0 left-1/2 -ml-1 -mt-1 w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
+            </div>
+
+            <!-- Inner Ring with Orbiting Ball -->
+            <div class="absolute inset-4 rounded-full border animate-[spin_25s_linear_infinite_reverse] border-slate-700/30">
+               <div class="absolute bottom-[15%] right-[15%] w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22d3ee] bg-cyan-400"></div>
+            </div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center">
+                <div id="experience-counter" class="text-3xl font-semibold tracking-tight text-white">0+</div>
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Years Enterprise</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 border-t pt-4 border-white/5">
+          <div class="flex items-center gap-2">
+            <i data-lucide="crown" class="w-3 h-3 text-amber-400"></i>
+            <span class="text-xs text-slate-300">.NET Architect</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="database" class="w-3 h-3 text-cyan-400"></i>
+            <span class="text-xs text-slate-300">Data Solutions Developer</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="palette" class="w-3 h-3 text-pink-400"></i>
+            <span class="text-xs text-slate-300">UX/UI Developer</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="server" class="w-3 h-3 text-emerald-400"></i>
+            <span class="text-xs text-slate-300">DevOps Engineer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-4 glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mb-4 border group-hover:border-blue-500/30 transition-colors border-white/5">
+          <i data-lucide="code-2" class="w-5 h-5 text-blue-300"></i>
+        </div>
+        <h3 class="text-base font-medium mb-2 text-white">{c('service_1_title', 'Custom .NET Applications')}</h3>
+        <p class="text-sm leading-relaxed text-slate-400">
+          {c('service_1_desc', 'Enterprise-grade ASP.NET Core and MVC solutions built with proven N-tier architecture patterns for Fortune 500 companies.')}
+        </p>
+      </div>
+
+      <div class="md:col-span-4 glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mb-4 border group-hover:border-cyan-500/30 transition-colors border-white/5">
+          <i data-lucide="network" class="w-5 h-5 text-cyan-300"></i>
+        </div>
+        <h3 class="text-base font-medium mb-2 text-white">{c('service_2_title', 'REST APIs & Microservices')}</h3>
+        <p class="text-sm leading-relaxed text-slate-400">
+          {c('service_2_desc', 'Scalable gRPC and RESTful services with advanced caching strategies using Redis for optimal performance.')}
+        </p>
+      </div>
+
+      <div class="md:col-span-4 glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mb-4 border group-hover:border-indigo-500/30 transition-colors border-white/5">
+          <i data-lucide="rocket" class="w-5 h-5 text-indigo-300"></i>
+        </div>
+        <h3 class="text-base font-medium mb-2 text-white">{c('service_3_title', 'Legacy Modernization')}</h3>
+        <p class="text-sm leading-relaxed text-slate-400">
+          {c('service_3_desc', 'Upgrade .NET Framework 2.0-4.8 applications to modern .NET 10 with EF Core 10 optimization and modern frontend integration.')}
+        </p>
+      </div>
+
+      <div class="md:col-span-6 glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center mb-4 border group-hover:border-pink-500/30 transition-colors border-white/5">
+          <i data-lucide="layout" class="w-5 h-5 text-pink-300"></i>
+        </div>
+        <h3 class="text-base font-medium mb-2 text-white">{c('service_4_title', 'UX/UI Design & Frontend')}</h3>
+        <p class="text-sm leading-relaxed text-slate-400">
+          {c('service_4_desc', 'Modern, responsive interfaces built with React 19, Angular 21, and Blazor. Bridging the gap between complex enterprise logic and intuitive user experiences.')}
+        </p>
+      </div>
+
+      <div class="md:col-span-6 glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-4 border group-hover:border-emerald-500/30 transition-colors border-white/5">
+          <i data-lucide="cloud" class="w-5 h-5 text-emerald-300"></i>
+        </div>
+        <h3 class="text-base font-medium mb-2 text-white">{c('service_5_title', 'Cloud Infrastructure & DevOps')}</h3>
+        <p class="text-sm leading-relaxed text-slate-400">
+          {c('service_5_desc', 'Robust CI/CD pipelines and cloud infrastructure management. Secure deployment with Azure Functions, AWS Lambda, Docker/Kubernetes for high-availability systems.')}
+        </p>
+      </div>
+    </div>
+
+    <section class="mt-24 text-center border-t pt-12 animate-up delay-300 border-white/5">
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-widest mb-8">Led by Fortune 500 Experience</p>
+      <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 opacity-60">
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="landmark" class="w-4 h-4"></i> {c('client_1', 'Wells Fargo Home Lending')}
+        </div>
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="users" class="w-4 h-4"></i> {c('client_2', 'Avionté')}
+        </div>
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="trending-up" class="w-4 h-4"></i> {c('client_3', 'Piper Sandler')}
+        </div>
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="zap" class="w-4 h-4"></i> {c('client_4', 'STRETTO INC')}
+        </div>
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="factory" class="w-4 h-4"></i> {c('client_5', 'Park Industries')}
+        </div>
+        <div class="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
+          <i data-lucide="power" class="w-4 h-4"></i> {c('client_6', 'WE Energy')}
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section for AI & SEO -->
+    <section class="mt-24 mb-24 animate-up delay-400">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">{c('faq_title', 'Common Questions')}</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          {c('faq_subtitle', 'Expert answers about our enterprise .NET development capabilities')}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_1_q', 'Do you work with legacy .NET versions?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('faq_1_a', 'Yes, we specialize in legacy modernization. We have deep expertise in .NET Framework versions 2.0 through 4.8 and help enterprises migrate to modern .NET 10 architectures while preserving critical business logic.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_2_q', 'How does AI-augmented development work?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('faq_2_a', 'We integrate advanced AI tools into our workflow for code generation, automated testing, and pattern recognition. This allows our Senior Architects to deliver enterprise-grade software up to 40% faster without compromising security.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_3_q', 'What does "Senior-Led" mean?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('faq_3_a', 'Unlike agencies that rely on junior developers, every project is architected and actively led by a Senior .NET Architect with Fortune 500 experience. This ensures superior quality and scalability.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_4_q', 'Can you handle high-scale applications?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('faq_4_a', 'Yes. Our team has built solutions for Fortune 500 companies handling millions of transactions. We specialize in N-tier architecture, distributed caching (Redis), and scalable cloud infrastructure.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 md:col-span-2">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_5_q', 'Do you handle frontend design and cloud DevOps?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('faq_5_a', 'Yes. We are a full-service modernization partner. Beyond .NET backend, we provide comprehensive UX/UI Design (React 19, Angular 21, Blazor) and Cloud Infrastructure management (Azure Functions, AWS Lambda, Docker/Kubernetes, CI/CD) to deliver complete, production-ready solutions.')}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center animate-up delay-500 border-white/10 bg-white/5">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>
+
+      <h2 class="text-3xl md:text-4xl font-medium mb-6 relative z-10 text-white">Ready to modernize your .NET applications?</h2>
+      <p class="max-w-xl mx-auto mb-8 relative z-10 text-slate-400">
+        Work with a Senior .NET Architect who's built enterprise solutions at Fortune 500 scale. Faster delivery with AI-augmented development.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+        <button class="px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200">
+          <a href="/contact">Start a Project</a>
+        </button>
+        <button class="px-6 py-3 rounded-lg border text-sm font-medium transition-colors border-white/10 bg-white/5 text-white hover:bg-white/10">
+          <a href="/about">Learn More</a>
+        </button>
+      </div>
+    </section>
+
+  <script is:inline>
+    // Animation Logic with Debugging and Robust Event Handling
+    (function() {
+      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const log = isDev ? console.log.bind(console) : () => {};
+      
+      log('[NM] Script initializing...');
+
+      const setupAnimations = () => {
+        log('[NM] setupAnimations triggered');
+
+        // 1. Cleanup old intervals
+        if (window.nmIntervals) {
+          log('[NM] Clearing ' + window.nmIntervals.length + ' old intervals');
+          window.nmIntervals.forEach(clearInterval);
+        }
+        window.nmIntervals = [];
+
+        // 2. Animate 15+ Counter
+        const counterElement = document.getElementById('experience-counter');
+        if (counterElement) {
+          log('[NM] Counter element found');
+          const target = 15;
+          const duration = 2000;
+          const frameDuration = 1000 / 60;
+          const totalFrames = Math.round(duration / frameDuration);
+          const easeOutQuad = t => t * (2 - t);
+
+          let frame = 0;
+          const countTo = setInterval(() => {
+            if (!document.body.contains(counterElement)) {
+              clearInterval(countTo);
+              return;
+            }
+
+            frame++;
+            const progress = easeOutQuad(frame / totalFrames);
+            const currentCount = Math.round(target * progress);
+
+            if (parseInt(counterElement.innerText) !== currentCount) {
+              counterElement.innerText = currentCount + '+';
+            }
+
+            if (frame === totalFrames) {
+              clearInterval(countTo);
+              counterElement.innerText = target + '+';
+            }
+          }, frameDuration);
+
+          window.nmIntervals.push(countTo);
+        } else {
+          log('[NM] Counter element NOT found');
+        }
+
+        // 3. Code Snippets Animation
+        const codeContainer = document.getElementById('code-container');
+        if (codeContainer) {
+          log('[NM] Code container found');
+          const filenameSpan = document.querySelector('span.text-slate-500.font-mono');
+
+          const codeSnippets = [
+            {
+              filename: 'Services/EnterpriseService.cs',
+              lines: [
+                [{t:'public', c:'blue'}, {t:' '}, {t:'class', c:'purple'}, {t:' '}, {t:'EnterpriseService', c:'cyan'}, {t:' {'}],
+                [{t:'    '}, {t:'// AI-enhanced data processing', c:'gray'}],
+                [{t:'    '}, {t:'private readonly', c:'blue'}, {t:' '}, {t:'DbContext', c:'cyan'}, {t:' _context;'}],
+                [{t:'    '}, {t:'private readonly', c:'blue'}, {t:' '}, {t:'IMemoryCache', c:'cyan'}, {t:' _cache;'}],
+                [{t:'    '}],
+                [{t:'    '}, {t:'public', c:'blue'}, {t:' '}, {t:'EnterpriseService', c:'cyan'}, {t:'('}, {t:'DbContext', c:'cyan'}, {t:' ctx)'}],
+                [{t:'    {'}],
+                [{t:'        _context = ctx;'}],
+                [{t:'    }'}],
+                [{t:'    '}],
+                [{t:'    '}, {t:'public async', c:'blue'}, {t:' '}, {t:'Task', c:'purple'}, {t:'<'}, {t:'List', c:'cyan'}, {t:'<'}, {t:'Entity', c:'cyan'}, {t:'>> '}, {t:'GetAsync', c:'blue'}, {t:'()'}],
+                [{t:'}'}]
+              ]
+            },
+            {
+              filename: 'Controllers/ApiController.cs',
+              lines: [
+                [{t:'[ApiController]', c:'blue'}],
+                [{t:'public', c:'blue'}, {t:' '}, {t:'class', c:'purple'}, {t:' '}, {t:'ApiController', c:'cyan'}, {t:' : '}, {t:'ControllerBase', c:'cyan'}],
+                [{t:'{'}],
+                [{t:'    '}, {t:'// RESTful API with Redis caching', c:'gray'}],
+                [{t:'    '}, {t:'private readonly', c:'blue'}, {t:' '}, {t:'IService', c:'cyan'}, {t:' _service;'}],
+                [{t:'    '}, {t:'private readonly', c:'blue'}, {t:' '}, {t:'IDistributedCache', c:'cyan'}, {t:' _cache;'}],
+                [{t:'    '}],
+                [{t:'    '}, {t:'[HttpGet]', c:'blue'}],
+                [{t:'    '}, {t:'public async', c:'blue'}, {t:' '}, {t:'Task', c:'purple'}, {t:'<'}, {t:'ActionResult', c:'cyan'}, {t:'> '}, {t:'GetAsync', c:'blue'}, {t:'()'}],
+                [{t:'    {'}],
+                [{t:'        '}, {t:'var', c:'blue'}, {t:' cacheKey = '}, {t:'"api_data_v1"', c:'green'}, {t:';'}],
+                [{t:'        '}, {t:'return await', c:'blue'}, {t:' _cache.'}, {t:'GetAsync', c:'blue'}, {t:'(cacheKey);'}]
+              ]
+            },
+            {
+              filename: 'data/ml_pipeline.py',
+              lines: [
+                [{t:'import', c:'blue'}, {t:' '}, {t:'pandas', c:'cyan'}, {t:' '}, {t:'as', c:'blue'}, {t:' pd'}],
+                [{t:'from', c:'blue'}, {t:' '}, {t:'sklearn.model_selection', c:'cyan'}, {t:' '}, {t:'import', c:'blue'}, {t:' train_test_split'}],
+                [{t:''}],
+                [{t:'# Data pipeline for .NET integration', c:'gray'}],
+                [{t:'class', c:'blue'}, {t:' '}, {t:'MLPipeline', c:'cyan'}, {t:':'}],
+                [{t:'    '}, {t:'def', c:'blue'}, {t:' '}, {t:'__init__', c:'cyan'}, {t:'(self, config):'}],
+                [{t:'        self.model = '}, {t:'None', c:'purple'}],
+                [{t:'        self.config = config'}],
+                [{t:'    '}],
+                [{t:'    '}, {t:'async def', c:'blue'}, {t:' '}, {t:'process_data', c:'cyan'}, {t:'(self, df):'}],
+                [{t:'        '}, {t:'# ETL transformation', c:'gray'}],
+                [{t:'        '}, {t:'return', c:'blue'}, {t:' df.dropna().reset_index()'}]
+              ]
+            },
+            {
+              filename: 'Models/Entity.cs',
+              lines: [
+                [{t:'using', c:'blue'}, {t:' '}, {t:'System.ComponentModel.DataAnnotations', c:'cyan'}, {t:';'}],
+                [{t:''}],
+                [{t:'// Entity Framework model', c:'gray'}],
+                [{t:'[Table(', c:'blue'}, {t:'"Entities"', c:'green'}, {t:')]', c:'blue'}],
+                [{t:'public', c:'blue'}, {t:' '}, {t:'class', c:'purple'}, {t:' '}, {t:'EnterpriseEntity', c:'cyan'}],
+                [{t:'{'}],
+                [{t:'    '}, {t:'[Key]', c:'blue'}],
+                [{t:'    '}, {t:'public', c:'blue'}, {t:' '}, {t:'int', c:'blue'}, {t:' '}, {t:'Id', c:'cyan'}, {t:' { '}, {t:'get', c:'blue'}, {t:'; '}, {t:'set', c:'blue'}, {t:'; }'}],
+                [{t:'    '}],
+                [{t:'    '}, {t:'[Required]', c:'blue'}],
+                [{t:'    '}, {t:'[StringLength(', c:'blue'}, {t:'255', c:'green'}, {t:')]', c:'blue'}],
+                [{t:'    '}, {t:'public', c:'blue'}, {t:' '}, {t:'string', c:'blue'}, {t:' '}, {t:'Name', c:'cyan'}, {t:' { '}, {t:'get', c:'blue'}, {t:'; '}, {t:'set', c:'blue'}, {t:'; }'}]
+              ]
+            }
+          ];
+
+          let currentSnippetIndex = 0;
+          let isTyping = false;
+
+          const colorMap = {
+            blue: 'text-blue-400',
+            purple: 'text-purple-400',
+            cyan: 'text-cyan-400',
+            green: 'text-emerald-400',
+            gray: 'text-slate-500 italic'
+          };
+
+          async function typeWriter(lines) {
+            isTyping = true;
+            codeContainer.innerHTML = '';
+
+            for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+              if (!document.body.contains(codeContainer)) {
+                log('[NM] Code container lost during typing');
+                return;
+              }
+
+              const tokens = lines[lineIndex];
+              const lineDiv = document.createElement('div');
+              lineDiv.className = 'flex items-center h-6';
+              codeContainer.appendChild(lineDiv);
+
+              for (let tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
+                const token = tokens[tokenIndex];
+                const text = token.t;
+                const colorClass = token.c ? colorMap[token.c] : 'text-slate-300';
+                const tokenSpan = document.createElement('span');
+                tokenSpan.className = colorClass;
+                lineDiv.appendChild(tokenSpan);
+
+                for (let charIndex = 0; charIndex < text.length; charIndex++) {
+                  if (!document.body.contains(codeContainer)) return;
+                  tokenSpan.textContent += text[charIndex];
+                  await new Promise(r => setTimeout(r, 45));
+                }
+              }
+              await new Promise(r => setTimeout(r, 300));
+            }
+
+            // Wait before next snippet
+            await new Promise(r => setTimeout(r, 5000));
+
+            if (!document.body.contains(codeContainer)) return;
+
+            currentSnippetIndex = (currentSnippetIndex + 1) % codeSnippets.length;
+            if (filenameSpan) filenameSpan.textContent = codeSnippets[currentSnippetIndex].filename;
+            typeWriter(codeSnippets[currentSnippetIndex].lines);
+          }
+
+          if (filenameSpan) filenameSpan.textContent = codeSnippets[0].filename;
+          typeWriter(codeSnippets[0].lines);
+        } else {
+          log('[NM] Code container NOT found');
+        }
+      };
+
+      // Robust Listener Management
+      // 1. Remove previous listener if exists (from previous page visit)
+      if (window.nmSetupAnimations) {
+        document.removeEventListener('astro:page-load', window.nmSetupAnimations);
+      }
+
+      // 2. Assign new listener
+      window.nmSetupAnimations = setupAnimations;
+
+      // 3. Add listener
+      document.addEventListener('astro:page-load', window.nmSetupAnimations);
+      log('[NM] Listener attached');
+
+    })();
+  </script>
+  </main>
+</BaseLayout>

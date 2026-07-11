@@ -1,0 +1,46 @@
+# Build outputs
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.production
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local Netlify folder
+.netlify
+
+# CMS & Security
+CMS-SETUP.md
+*.key
+*.pem
+supabase-cms-schema.sql
+dkim-record.json
+add-dkim.*
+fix-mx.mjs
+revert-mx.mjs
+send-*.ps1
+
+# Additional security files
+.env.local
+.env.development
+.env.staging

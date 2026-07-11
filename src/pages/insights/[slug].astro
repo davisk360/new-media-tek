@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { posts, postSlugs } from '../../data/posts';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'ef-core-10-performance-tips' } },
+    { params: { slug: 'migrating-wcf-to-grpc-dotnet-9' } },
+    { params: { slug: 'ai-augmented-dotnet-development' } },
+    { params: { slug: 'legacy-dotnet-modernization-guide' } }
+  ];
+}
+
+const { slug } = Astro.params;
+const post = posts[slug as keyof typeof posts];
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.title,
+  "description": post.excerpt,
+  "datePublished": post.publishDate,
+  "image": "https://newmediatek.net/images/og-default.png",
+  "author": { "@type": "Organization", "name": "New Media Tek", "url": "https://newmediatek.net" },
+  "publisher": { "@type": "Organization", "name": "New Media Tek", "logo": { "@type": "ImageObject", "url": "https://newmediatek.net/images/logo-icon.png" } },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": `https://newmediatek.net/insights/${slug}` }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Insights", "item": "https://newmediatek.net/insights" },
+    { "@type": "ListItem", "position": 3, "name": post.title }
+  ]
+};
+---
+
+<BaseLayout title={`${post.title} | New Media Tek`} description={post.excerpt || post.title}>
+  <script type="application/ld+json" set:html={JSON.stringify([schema, breadcrumbSchema])} />
+  
+  <div class="max-w-4xl mx-auto pt-32 px-6 pb-20">
+    <header class="mb-12">
+      <a href="/insights" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">← Back to Insights</a>
+      <div class="flex gap-3 mb-4">
+        <span class="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">{post.category}</span>
+        <span class="text-slate-400 text-sm">{post.readTime}</span>
+        <span class="text-slate-400 text-sm">{post.publishDate}</span>
+      </div>
+      <h1 class="text-4xl font-medium text-white mb-4">{post.title}</h1>
+      <p class="text-slate-400">By {post.author}</p>
+    </header>
+
+    <article class="prose prose-invert max-w-none text-slate-300">
+      <Fragment set:html={post.content} />
+    </article>
+
+    <section class="mt-16 p-8 bg-blue-500/10 rounded-xl border border-white/10 text-center">
+      <h2 class="text-2xl font-semibold text-white mb-4">Need Help with Your .NET Project?</h2>
+      <p class="text-slate-300 mb-6">Our Senior .NET Architects can help modernize your enterprise applications.</p>
+      <a href="/contact" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">Schedule Consultation</a>
+    </section>
+  </div>
+</BaseLayout>

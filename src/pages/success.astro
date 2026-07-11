@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPhoneLink, getEmailLink } from '../config/site';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Thank You - Consultation Request Received",
+  "description": "Thank you for scheduling a consultation with New Media Tek. We'll contact you within 24 hours."
+};
+---
+
+<BaseLayout
+  title="Thank You - Consultation Request | New Media Tek"
+  description="Thank you for scheduling a consultation with New Media Tek. We'll contact you within 24 hours."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <div class="z-10 max-w-4xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative text-center">
+
+    <section class="max-w-2xl mx-auto">
+      
+      <!-- Success Icon -->
+      <div class="flex justify-center mb-8">
+        <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30">
+          <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div class="mb-12 animate-up">
+        <h1 class="text-5xl md:text-6xl font-medium text-white tracking-tight mb-6">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-emerald-300 to-white">
+            Thank You!
+          </span>
+        </h1>
+        
+        <p class="text-xl text-slate-300 leading-relaxed mb-4">
+          Your consultation request has been received successfully.
+        </p>
+        
+        <p class="text-lg text-slate-400">
+          We'll contact you within <strong>24 hours</strong> to schedule your consultation with our Senior .NET Architect.
+        </p>
+      </div>
+
+      <!-- What Happens Next -->
+      <div class="glass-card rounded-2xl p-8 mb-12 text-left">
+        <h2 class="text-2xl font-semibold text-white mb-6 text-center">What Happens Next</h2>
+        
+        <div class="space-y-6">
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+              <span class="text-blue-300 font-semibold">1</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Email Confirmation</h3>
+              <p class="text-slate-400">You'll receive a confirmation email with your consultation details.</p>
+            </div>
+          </div>
+          
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+              <span class="text-blue-300 font-semibold">2</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Architect Review</h3>
+              <p class="text-slate-400">Our Senior .NET Architect reviews your project requirements.</p>
+            </div>
+          </div>
+          
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+              <span class="text-blue-300 font-semibold">3</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Consultation Call</h3>
+              <p class="text-slate-400">30-minute discovery call to discuss your enterprise needs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="mb-12">
+        <h2 class="text-xl font-semibold text-white mb-6">Need to Reach Us Sooner?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <a href={getPhoneLink()} class="glass-card rounded-xl p-6 text-center group hover:border-blue-500/30 transition-all">
+            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/30 transition-colors">
+              <i data-lucide="phone" class="w-6 h-6 text-blue-300"></i>
+            </div>
+            <div class="text-white font-medium mb-1">Call Us</div>
+            <div class="text-slate-400 text-sm">+1 (929) 630-5021</div>
+          </a>
+          
+          <a href={getEmailLink()} class="glass-card rounded-xl p-6 text-center group hover:border-blue-500/30 transition-all">
+            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/30 transition-colors">
+              <i data-lucide="mail" class="w-6 h-6 text-blue-300"></i>
+            </div>
+            <div class="text-white font-medium mb-1">Email Us</div>
+            <div class="text-slate-400 text-sm">newmediatek.net</div>
+          </a>
+          
+          <a href="/" class="glass-card rounded-xl p-6 text-center group hover:border-blue-500/30 transition-all">
+            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/30 transition-colors">
+              <i data-lucide="arrow-left" class="w-6 h-6 text-blue-300"></i>
+            </div>
+            <div class="text-white font-medium mb-1">Back to Site</div>
+            <div class="text-slate-400 text-sm">View our services</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Urgent Matters -->
+      <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6">
+        <h3 class="text-lg font-medium text-blue-300 mb-2">Urgent Project?</h3>
+        <p class="text-slate-300 mb-4">
+          For urgent matters or time-sensitive projects, call us directly for immediate assistance.
+        </p>
+        <a href={getPhoneLink()} class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+          Call Now
+        </a>
+      </div>
+
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,129 @@
+# New Media Tek
+
+> Enterprise .NET Development, AI-Accelerated.
+> Led by a Senior .NET Architect with 15+ years of Fortune 500 experience.
+
+## Company Overview
+New Media Tek is a B2B software development agency specializing in high-performance .NET solutions. We combine deep enterprise architecture expertise with AI-augmented development processes to deliver software faster without compromising quality or security. Our unique "Senior-Led" model ensures every project is architected by experienced professionals.
+
+## Core Services
+
+### 1. Custom .NET Applications
+- **Description:** Enterprise-grade ASP.NET Core and MVC solutions built with N-tier architecture.
+- **Key Tech:** .NET 10, ASP.NET Core, Entity Framework Core 10, SQL Server, C# 14.
+- **Use Cases:** High-frequency trading platforms, internal enterprise tools, complex data processing systems.
+- **AI Integration:** AI-assisted code generation, automated unit testing, intelligent refactoring.
+
+### 2. REST APIs & Microservices
+- **Description:** Scalable, secure API architectures designed for high availability.
+- **Key Tech:** WCF (Legacy support), RESTful APIs, Redis Caching, SignalR, gRPC.
+- **Performance:** Optimized for sub-second response times and high concurrency.
+- **AI Features:** Automated API documentation generation, intelligent endpoint testing.
+
+### 3. Legacy Modernization
+- **Description:** Expert migration of legacy systems to modern cloud-native architectures.
+- **Capabilities:**
+  - .NET Framework (2.0-4.8) -> .NET 10
+  - Monolith -> Microservices
+  - Web Forms -> React 19/Angular 21/Blazor
+  - On-premise -> Azure Cloud/AWS
+- **AI Tools:** Automated code analysis, migration pattern recognition, risk assessment.
+
+### 4. Enterprise Architecture
+- **Description:** Strategic technical planning for large-scale systems.
+- **Focus:** Scalability, Security, Compliance (HIPAA, SOC2 standards awareness), Cloud Integration.
+- **Deliverables:** Architecture diagrams, scalability plans, security frameworks, migration roadmaps.
+
+### 5. UX/UI Design & Frontend
+- **Description:** Modern, responsive interfaces bridging complex enterprise logic with intuitive user experiences.
+- **Key Tech:** React 19, Angular 21, Blazor, TypeScript, Figma, Enterprise Design Systems.
+- **Capabilities:** Accessibility (WCAG 2.1 AA), Responsive Dashboards, SPA Development, Component Libraries.
+- **AI Enhancement:** AI-powered design system generation, automated accessibility testing.
+
+### 6. Cloud Infrastructure & DevOps
+- **Description:** Secure, scalable cloud architecture and automated deployment pipelines.
+- **Key Tech:** Azure, AWS, Docker, Kubernetes, Terraform (IaC), GitHub Actions.
+- **Focus:** 99.99% Availability, Security Compliance, Auto-scaling, CI/CD, Infrastructure as Code.
+- **AI Operations:** Predictive scaling, automated monitoring, intelligent alerting.
+
+### 7. Cloud Data Migration
+- **Description:** Seamless migration of on-premises databases and data warehouses to cloud platforms.
+- **Key Tech:** AWS Database Migration Service (DMS), Azure Data Migration Service, Data Lake migration.
+- **Capabilities:** Zero-downtime transitions, comprehensive data integrity validation, schema mapping.
+
+### 8. Cloud Platform Integrations
+- **Description:** Deep expertise in AWS and Azure cloud services integration.
+- **Key Tech:** AWS (EC2, S3, RDS, Lambda, EKS), Azure (App Service, Azure SQL, Functions, AKS).
+- **Focus:** Serverless Architecture, Multi-Cloud Strategy, Cloud-native applications.
+
+### 9. ML.NET & Machine Learning
+- **Description:** Native .NET machine learning with Python integration for data science workflows.
+- **Key Tech:** ML.NET 5.0, Python, TorchSharp, PyTorch, Natural Language Processing.
+- **Capabilities:** Predictive models, deep learning integration, NLP, intelligent .NET applications.
+
+### 10. Power BI Analytics
+- **Description:** Embedded Power BI dashboards and analytics within .NET applications.
+- **Key Tech:** Power BI Embedded, Interactive Dashboards, Real-time Data Visualization.
+- **Use Cases:** Business intelligence, executive reporting, enterprise decision-making.
+
+### 11. Advanced Data Architecture
+- **Description:** Scalable data architectures with .NET and Python data pipelines.
+- **Key Tech:** EF Core 10, Python ETL, Data Governance, Performance Optimization.
+- **Capabilities:** Enterprise-scale analytics, automated data transformation, data quality assurance.
+
+## Technical Expertise
+- **Backend:** .NET 10, C# 14, ASP.NET Core, Web API, WCF, gRPC.
+- **Data:** SQL Server, Entity Framework Core 10, Redis, Azure SQL, Cosmos DB, Power BI.
+- **Machine Learning:** ML.NET 5.0, Python, TorchSharp, PyTorch, NLP.
+- **Frontend:** React 19, Angular 21, TypeScript, Blazor, HTML5, CSS3.
+- **Cloud & DevOps:** Azure, AWS, Docker, Kubernetes, Terraform, GitHub Actions.
+- **AI Integration:** GitHub Copilot, ChatGPT API, Claude AI, custom AI tooling.
+- **Testing:** Automated unit testing, integration testing, performance testing.
+
+## The Senior-Led Advantage
+Unlike agencies that rely heavily on junior developers, New Media Tek is "Senior-Led."
+- **Leadership:** Projects are architected and overseen by a Senior .NET Architect with Fortune 500 background.
+- **Team Structure:** Lean, expert team (Senior Architect, Mid-Level Dev, UX/UI Designer, DevOps Engineer).
+- **Outcome:** Enterprise-grade code quality, reduced technical debt, and faster time-to-market.
+- **AI Augmentation:** 40% faster delivery through intelligent automation while maintaining human oversight.
+
+## Industry Experience
+- **Finance:** Trading platforms, risk management systems, compliance software.
+- **Healthcare:** HIPAA-compliant applications, medical records systems, telehealth platforms.
+- **Manufacturing:** ERP systems, inventory management, IoT integration.
+- **Retail:** E-commerce platforms, customer analytics, supply chain systems.
+
+## Development Methodology
+1. **AI-Assisted Discovery:** Automated requirements analysis and architecture planning
+2. **Senior Architecture Review:** Every design reviewed by Senior .NET Architect
+3. **AI-Augmented Development:** Code generation, automated testing, continuous integration
+4. **Quality Assurance:** Human oversight with AI-powered testing and analysis
+5. **Deployment & Monitoring:** Automated CI/CD with intelligent monitoring
+
+## Contact Information
+- **Website:** https://newmediatek.net
+- **Consultation:** https://newmediatek.net/contact
+- **Service Area:** United States (Remote & On-site options)
+- **Response Time:** Within 24 hours for all inquiries
+
+## Links
+- [Services](https://newmediatek.net/services) - Full service offerings
+- [Insights](https://newmediatek.net/insights) - Technical blog and thought leadership
+- [Process](https://newmediatek.net/process) - AI-augmented development methodology
+- [Portfolio](https://newmediatek.net/portfolio) - Fortune 500 success stories
+- [About](https://newmediatek.net/about) - Meet our senior-led team
+- [Contracts & Vendor Info](https://newmediatek.net/contracts) - Government and corporate vendor onboarding
+- [Capabilities Statement](https://newmediatek.net/capabilities-statement) - Printable capabilities document for procurement
+
+## Technical Insights (Blog)
+Expert articles from our Senior .NET Architects:
+- [Entity Framework Core 10 Performance](https://newmediatek.net/insights/ef-core-10-performance-tips) - Query optimization, caching, batch operations
+- [WCF to gRPC Migration](https://newmediatek.net/insights/migrating-wcf-to-grpc-dotnet-9) - Modernizing legacy services with 10x performance gains
+- [AI-Augmented .NET Development](https://newmediatek.net/insights/ai-augmented-dotnet-development) - Leveraging AI for 40% faster delivery
+- [Legacy .NET Modernization](https://newmediatek.net/insights/legacy-dotnet-modernization-guide) - .NET Framework to .NET 10 migration strategies
+
+## AI-Specific Information
+- **AI Models Used:** GPT-4, Claude 3, GitHub Copilot, custom fine-tuned models
+- **AI Capabilities:** Code generation, automated testing, documentation, analysis
+- **Human Oversight:** All AI-generated code reviewed by Senior .NET Architect
+- **Security:** AI tools operate in isolated environments, no code exposure to public models

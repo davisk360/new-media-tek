@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- White circle outline (like their logo) -->
+  <circle cx="16" cy="16" r="14" fill="white" stroke="white" stroke-width="1"/>
+  
+  <!-- Abstract elements from their actual logo - simplified -->
+  <!-- Based on their AVIONTÉ logo with the abstract shapes -->
+  <g fill="white">
+    <!-- Simplified abstract mark representing their logo elements -->
+    <path d="M8 24 L16 8 L24 24 L10 24 L10 18 L22 18" 
+          stroke="white" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          fill="none"/>
+    
+    <!-- Small circular elements like in their logo -->
+    <circle cx="10" cy="12" r="1.5" fill="white"/>
+    <circle cx="22" cy="12" r="1.5" fill="white"/>
+  </g>
+</svg>

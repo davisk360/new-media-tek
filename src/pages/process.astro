@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent, getContentValue } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('process');
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Process", "item": "https://newmediatek.net/process" }
+  ]
+};
+---
+
+<BaseLayout 
+  title="AI-Augmented Enterprise Development Process | New Media Tek" 
+  description="Our unique methodology combines Senior Architecture with AI acceleration. 40% faster delivery for .NET, Cloud, and Frontend projects with enterprise security."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumbSchema)} />
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+    
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', 'AI-Augmented Development')}
+      </div>
+      
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', 'Development')}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'Process')}</span>
+      </h1>
+      
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Senior-led .NET development and data solutions accelerated by AI. Enterprise-grade methodology combining 15+ years of Fortune 500 experience with ML.NET analytics and cutting-edge AI tools for faster, smarter delivery.')}
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <a href="/contact" class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          Start Your Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+        <a href="/services" class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <i data-lucide="settings" class="w-4 h-4"></i> Our Services
+        </a>
+      </div>
+    </section>
+
+    <!-- AI-Augmented Approach -->
+    <section class="mb-24">
+      <div class="glass-card rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/5">
+                <i data-lucide="cpu" class="w-6 h-6 text-blue-300"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl font-semibold text-white">AI-Augmented Methodology</h2>
+                <p class="text-slate-400 text-sm">Enterprise expertise + AI acceleration</p>
+              </div>
+            </div>
+            
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-lg font-medium text-white mb-3">Senior Architect Oversight</h3>
+                <p class="text-slate-400 leading-relaxed">
+                  Every project benefits from 15+ years of Fortune 500 experience. AI tools accelerate development while senior expertise ensures quality, security, and architectural excellence.
+                </p>
+              </div>
+              
+              <div>
+                <h3 class="text-lg font-medium text-white mb-3">AI-Enhanced Development</h3>
+                <p class="text-slate-400 leading-relaxed">
+                  AI-assisted code generation, automated testing, and intelligent debugging accelerate routine tasks while maintaining enterprise standards and security protocols.
+                </p>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4 pt-4">
+                <div class="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div class="text-2xl font-bold text-blue-400 mb-1">40%</div>
+                  <div class="text-xs text-slate-400">Faster Delivery</div>
+                </div>
+                <div class="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div class="text-2xl font-bold text-cyan-400 mb-1">100%</div>
+                  <div class="text-xs text-slate-400">Quality Assurance</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="relative">
+            <div class="glass-card rounded-2xl p-6 h-full">
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <i data-lucide="brain" class="w-4 h-4 text-blue-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">AI Code Generation</div>
+                    <div class="text-xs text-slate-400">Accelerated boilerplate & patterns</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-purple-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Automated Testing</div>
+                    <div class="text-xs text-slate-400">AI-enhanced test coverage</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                    <i data-lucide="bug" class="w-4 h-4 text-cyan-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Intelligent Debugging</div>
+                    <div class="text-xs text-slate-400">Pattern recognition & fixes</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                    <i data-lucide="file-check" class="w-4 h-4 text-indigo-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Code Review Assistant</div>
+                    <div class="text-xs text-slate-400">Automated quality checks</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                    <i data-lucide="zap" class="w-4 h-4 text-emerald-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Performance Optimization</div>
+                    <div class="text-xs text-slate-400">AI-driven improvements</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                    <i data-lucide="lock" class="w-4 h-4 text-orange-300"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Security Analysis</div>
+                    <div class="text-xs text-slate-400">Automated vulnerability detection</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Development Process -->
+    <section class="mb-24">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Development Lifecycle</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Structured approach ensuring quality, security, and timely delivery
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="search" class="w-8 h-8 text-blue-300"></i>
+          </div>
+          <div class="text-lg font-semibold text-white mb-2">1. Discovery</div>
+          <p class="text-slate-400 text-sm mb-4">Requirements analysis, technical architecture, AI-assisted planning</p>
+          <div class="text-xs text-blue-400 font-medium">Week 1</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="pen-tool" class="w-8 h-8 text-cyan-300"></i>
+          </div>
+          <div class="text-lg font-semibold text-white mb-2">2. Design</div>
+          <p class="text-slate-400 text-sm mb-4">System architecture, database design, AI-enhanced prototyping</p>
+          <div class="text-xs text-cyan-400 font-medium">Week 2</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="code" class="w-8 h-8 text-indigo-300"></i>
+          </div>
+          <div class="text-lg font-semibold text-white mb-2">3. Development</div>
+          <p class="text-slate-400 text-sm mb-4">AI-accelerated coding, senior oversight, continuous integration</p>
+          <div class="text-xs text-indigo-400 font-medium">Weeks 3-8</div>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-1 transition-transform">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <i data-lucide="rocket" class="w-8 h-8 text-emerald-300"></i>
+          </div>
+          <div class="text-lg font-semibold text-white mb-2">4. Deployment</div>
+          <p class="text-slate-400 text-sm mb-4">Enterprise deployment, monitoring, AI-driven optimization</p>
+          <div class="text-xs text-emerald-400 font-medium">Week 9</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quality Assurance -->
+    <section class="mb-24 border-t pt-16 border-white/5">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Quality Assurance</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Enterprise-grade testing and security protocols
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass-card rounded-xl p-6">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mb-4 border border-white/5">
+            <i data-lucide="check-circle" class="w-6 h-6 text-blue-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Automated Testing</h3>
+          <p class="text-slate-400 text-sm">AI-enhanced unit tests, integration tests, and continuous testing pipelines</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-6">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mb-4 border border-white/5">
+            <i data-lucide="shield" class="w-6 h-6 text-cyan-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Security Testing</h3>
+          <p class="text-slate-400 text-sm">AI-powered vulnerability scanning, penetration testing, compliance checks</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-6">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center mb-4 border border-white/5">
+            <i data-lucide="trending-up" class="w-6 h-6 text-indigo-300"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Performance Testing</h3>
+          <p class="text-slate-400 text-sm">Load testing, AI-driven optimization, scalability validation</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>
+      
+      <h2 class="text-3xl md:text-4xl font-medium mb-6 relative z-10 text-white">Experience AI-Augmented Development</h2>
+      <p class="max-w-xl mx-auto mb-8 relative z-10 text-slate-400">
+        Get enterprise .NET solutions delivered faster with AI acceleration while maintaining the quality and security your business requires.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+        <a href="/contact" class="px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200">
+          Start Your Project
+        </a>
+        <a href="/portfolio" class="px-6 py-3 rounded-lg border text-sm font-medium transition-colors border-white/10 bg-white/5 text-white hover:bg-white/10">
+          View Results
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

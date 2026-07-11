@@ -1,0 +1,101 @@
+---
+// Mobile Navigation Component
+// Uses CSS classes from global.css for proper styling
+import { siteConfig, getPhoneLink, getEmailLink } from '../config/site';
+---
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="mobile-menu-overlay hidden">
+  <!-- Backdrop -->
+  <div class="mobile-menu-backdrop" onclick="toggleMobileMenu()"></div>
+
+  <!-- Menu Panel -->
+  <div id="mobile-menu-panel" class="mobile-menu-panel">
+    <!-- Menu Header -->
+    <div class="mobile-menu-header">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 flex items-center justify-center drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
+          <img src="/images/logo-icon.png" alt="New Media Tek Logo" class="w-full h-full object-contain filter brightness-110" />
+        </div>
+        <span class="text-sm font-medium text-white">New Media Tek</span>
+      </div>
+      <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="mobile-menu-nav">
+      <a href="/services" class="mobile-menu-link" onclick="toggleMobileMenu()">
+        <i data-lucide="code" class="w-5 h-5"></i>
+        <span>Services</span>
+      </a>
+      <a href="/insights" class="mobile-menu-link" onclick="toggleMobileMenu()">
+        <i data-lucide="book-open" class="w-5 h-5"></i>
+        <span>Insights</span>
+      </a>
+      <a href="/about" class="mobile-menu-link" onclick="toggleMobileMenu()">
+        <i data-lucide="users" class="w-5 h-5"></i>
+        <span>About</span>
+      </a>
+      <a href="/portfolio" class="mobile-menu-link" onclick="toggleMobileMenu()">
+        <i data-lucide="briefcase" class="w-5 h-5"></i>
+        <span>Portfolio</span>
+      </a>
+      <a href="/process" class="mobile-menu-link" onclick="toggleMobileMenu()">
+        <i data-lucide="settings" class="w-5 h-5"></i>
+        <span>Process</span>
+      </a>
+      <a href="/contact" class="mobile-menu-link mobile-menu-link-primary" onclick="toggleMobileMenu()">
+        <i data-lucide="phone" class="w-5 h-5"></i>
+        <span>Schedule Consultation</span>
+      </a>
+    </nav>
+
+    <!-- Contact Info -->
+    <div class="mobile-menu-footer">
+      <div class="space-y-3 text-sm text-slate-400">
+        <div class="flex items-center gap-3">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+          <a href={getPhoneLink()} class="hover:text-white transition-colors">{siteConfig.contact.phone.display}</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          <a href={getEmailLink()} class="hover:text-white transition-colors">{siteConfig.contact.email.display}</a>
+        </div>
+      </div>
+      <!-- Social Links -->
+      <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
+        <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-400 transition-colors" aria-label="LinkedIn">
+          <i data-lucide="linkedin" class="w-5 h-5"></i>
+        </a>
+        <a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-400 transition-colors" aria-label="X (Twitter)">
+          <i data-lucide="twitter" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const panel = document.getElementById('mobile-menu-panel');
+
+    if (menu.classList.contains('hidden')) {
+      // Open menu
+      menu.classList.remove('hidden');
+      setTimeout(() => {
+        panel.classList.add('open');
+      }, 10);
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Close menu
+      panel.classList.remove('open');
+      setTimeout(() => {
+        menu.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+</script>

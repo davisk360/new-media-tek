@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent, getContentValue, getProjects } from '../utils/content';
+
+// Fetch dynamic content from CMS
+const content = await getPageContent('portfolio');
+const projects = await getProjects();
+const c = (key: string, fallback: string = '') => getContentValue(content, key, fallback);
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://newmediatek.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Portfolio", "item": "https://newmediatek.net/portfolio" }
+  ]
+};
+
+// Color mapping for project cards
+const colorMap: Record<string, { gradient: string; text: string; dot: string }> = {
+  blue: { gradient: 'from-blue-600/20 to-purple-600/20', text: 'text-blue-300', dot: 'bg-blue-400' },
+  cyan: { gradient: 'from-cyan-600/20 to-teal-600/20', text: 'text-cyan-300', dot: 'bg-cyan-400' },
+  indigo: { gradient: 'from-indigo-600/20 to-blue-600/20', text: 'text-indigo-300', dot: 'bg-indigo-400' },
+  purple: { gradient: 'from-purple-600/20 to-pink-600/20', text: 'text-purple-300', dot: 'bg-purple-400' },
+  emerald: { gradient: 'from-emerald-600/20 to-teal-600/20', text: 'text-emerald-300', dot: 'bg-emerald-400' },
+};
+
+// Helper to get colors for a project
+const getColors = (color: string) => colorMap[color] || colorMap.blue;
+---
+
+<BaseLayout 
+  title="Enterprise Portfolio & Success Stories | New Media Tek" 
+  description="Explore our Fortune 500 success stories. High-performance .NET applications, Cloud/DevOps transformations, and modern UX/UI deliverables."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumbSchema)} />
+  <div class="z-10 max-w-7xl mr-auto ml-auto pt-32 pr-6 pb-20 pl-6 relative">
+    
+    <section class="text-center max-w-4xl mx-auto mb-24 animate-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-medium uppercase tracking-wider mb-8 backdrop-blur-sm text-blue-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        {c('hero_badge', 'Fortune 500 Success Stories')}
+      </div>
+      
+      <h1 class="md:text-7xl lg:text-8xl leading-[1.1] text-5xl font-medium text-white tracking-tight mb-8">
+        {c('hero_title', 'Enterprise')}
+        <br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-white">{c('hero_title_highlight', 'Portfolio')}</span>
+      </h1>
+      
+      <p class="text-lg font-light leading-relaxed max-w-2xl mx-auto mb-10 text-slate-400">
+        {c('hero_subtitle', 'Proven .NET solutions and advanced data analytics delivered for Fortune 500 corporations. Real-world enterprise applications, intelligent APIs, and data-driven modernization projects that drive business value.')}
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 gap-x-4 gap-y-4 items-center justify-center">
+        <a href="/contact" class="h-12 px-8 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] bg-white text-slate-950 hover:bg-slate-200">
+          Discuss Your Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+        <a href="/services" class="h-12 px-8 rounded-full border text-sm font-medium hover:border-slate-500 transition-colors backdrop-blur-sm flex items-center gap-2 border-slate-700 bg-slate-950/50 text-slate-300 hover:text-white">
+          <i data-lucide="code" class="w-4 h-4"></i> Our Services
+        </a>
+      </div>
+    </section>
+
+    <!-- Featured Projects - Dynamic from CMS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
+      {projects.map((project) => {
+        const colors = getColors(project.color || 'blue');
+        const technologies = project.technologies?.split('|') || [];
+        const stats = project.stats || [];
+        
+        return (
+          <div class="glass-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-transform group">
+            <div class={`h-48 bg-gradient-to-br ${colors.gradient} flex items-center justify-center border-b border-white/5`}>
+              <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-3">
+                  <i data-lucide={project.icon || 'briefcase'} class={`w-8 h-8 ${colors.text}`}></i>
+                </div>
+                <div class={`text-sm font-medium ${colors.text}`}>{project.industry}</div>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-[10px] px-2 py-1 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">Fortune 500</span>
+                {technologies[0] && (
+                  <span class="text-[10px] px-2 py-1 rounded-full border text-blue-400 bg-blue-400/10 border-blue-400/20">{technologies[0]}</span>
+                )}
+              </div>
+              <h3 class="text-xl font-semibold text-white mb-3">{project.title}</h3>
+              <p class="text-slate-400 leading-relaxed mb-4">{project.description}</p>
+              <div class="space-y-2 mb-4">
+                {stats.map((stat) => (
+                  <div class="flex items-center gap-2">
+                    <div class={`w-1.5 h-1.5 rounded-full ${colors.dot}`}></div>
+                    <span class="text-sm text-slate-300">{stat}</span>
+                  </div>
+                ))}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {technologies.map((tech) => (
+                  <span class="text-xs px-2 py-1 rounded bg-white/5 text-slate-300">{tech}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Success Metrics -->
+    <section class="mt-24 border-t pt-16 border-white/5">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">Enterprise Impact</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Measurable results delivered to Fortune 500 clients
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="text-3xl font-bold text-blue-400 mb-2">500+</div>
+          <div class="text-sm text-slate-300 mb-1">Fortune 500 Projects</div>
+          <div class="text-xs text-slate-500">Across multiple industries</div>
+        </div>
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="text-3xl font-bold text-cyan-400 mb-2">99.9%</div>
+          <div class="text-sm text-slate-300 mb-1">System Uptime</div>
+          <div class="text-xs text-slate-500">Enterprise reliability</div>
+        </div>
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="text-3xl font-bold text-indigo-400 mb-2">60%</div>
+          <div class="text-sm text-slate-300 mb-1">Performance Gain</div>
+          <div class="text-xs text-slate-500">Average improvement</div>
+        </div>
+        <div class="glass-card rounded-xl p-6 text-center">
+          <div class="text-3xl font-bold text-emerald-400 mb-2">15+</div>
+          <div class="text-sm text-slate-300 mb-1">Years Experience</div>
+          <div class="text-xs text-slate-500">Enterprise .NET expertise</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>
+      
+      <h2 class="text-3xl md:text-4xl font-medium mb-6 relative z-10 text-white">Ready to add your success story?</h2>
+      <p class="max-w-xl mx-auto mb-8 relative z-10 text-slate-400">
+        Join the Fortune 500 companies that trust our Senior .NET Architect for their most critical enterprise projects.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+        <a href="/contact" class="px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-white text-black hover:bg-slate-200">
+          Start Your Project
+        </a>
+        <a href="/about#team" class="px-6 py-3 rounded-lg border text-sm font-medium transition-colors border-white/10 bg-white/5 text-white hover:bg-white/10">
+          Meet the Team
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
