@@ -60,7 +60,6 @@ const socialImageURL = new URL(image, Astro.url);
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="https://unpkg.com">
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://cdn.userbird.com">
   
   <!-- Fonts with display=swap for better CLS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -69,20 +68,6 @@ const socialImageURL = new URL(image, Astro.url);
   <script src="https://unpkg.com/lucide@0.562.0/dist/umd/lucide.min.js" is:inline></script>
   <ClientRouter />
   <slot name="head" />
-  
-  <!-- Userbird Analytics -->
-  <script is:inline>
-    (function() {
-      window.userbirdq = window.userbirdq || [];
-      window.USERBIRD_SITE_ID = 'sOzikBJM';
-      var script = document.createElement('script');
-      script.defer = true;
-      script.setAttribute('data-site', window.USERBIRD_SITE_ID);
-      script.src = "https://cdn.userbird.com/analytics.min.js";
-      var currentScript = document.currentScript || document.getElementsByTagName('script')[0];
-      currentScript.parentNode.insertBefore(script, currentScript);
-    })();
-  </script>
   
   <style is:global>
     @keyframes fadeInDown {
