@@ -113,11 +113,6 @@ export function initContactForm(): void {
       showSuccess(result.message || 'Thank you! We will be in touch soon.');
       form.reset();
       
-      // Track conversion (if analytics is set up)
-      if (typeof window !== 'undefined' && (window as any).userbirdq) {
-        (window as any).userbirdq.push(['track', 'Contact Form Submitted']);
-      }
-      
     } catch (error) {
       console.error('Form submission error:', error);
       showError(error instanceof Error ? error.message : 'An error occurred. Please try again.');
