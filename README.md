@@ -1,6 +1,6 @@
 # New Media Tek
 
-> The website and content platform for New Media Tek, a senior .NET Architect-led B2B software consultancy: a custom Supabase-backed Visual CMS for non-technical editors, an AI chatbot that captures and qualifies inbound leads, SEO and Answer Engine Optimization (structured data for Google AI Overviews / Perplexity / ChatGPT), and a security-hardened contact and email stack.
+> The website for New Media Tek, a senior .NET Architect-led B2B software consultancy.
 >
 > **Live:** https://newmediatek.net/
 
