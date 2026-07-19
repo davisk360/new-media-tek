@@ -81,3 +81,13 @@ VISUAL-CMS-SETUP.md
 # Email test artifacts (keep emails/contact-form/ which is used by the Netlify email plugin)
 emails/test-email.html
 emails/test-email/
+
+# Removed debug/test Netlify functions (security: were deployed unauthenticated to production)
+netlify/functions/debug-all.js
+netlify/functions/direct-test.js
+netlify/functions/sendgrid-test.js
+netlify/functions/test-contact-template.js
+netlify/functions/test-email.js
+netlify/functions/test-netlify-email.js
+netlify/functions/test-password.js
+netlify/functions/trigger-rebuild.js
