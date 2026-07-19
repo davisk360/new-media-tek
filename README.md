@@ -4,12 +4,28 @@
 >
 > **Live:** https://newmediatek.net/
 
-New Media Tek is a senior-led, AI-accelerated .NET consultancy serving Fortune 500 B2B clients. This repository is the complete source for its website: the public pages and ad copy, a from-scratch Supabase-backed Visual CMS for non-technical editors, an AI chatbot that captures and qualifies inbound leads, SEO and Answer Engine Optimization (JSON-LD structured data for Google AI Overviews, Perplexity, and ChatGPT), and the security and email infrastructure that ties it together. The site is built with Astro 5 + Tailwind 4, mounting React 19 islands only where interactivity is needed; everything else ships as static HTML with near-zero JavaScript.
+New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; AI-augmented development is one of its service lines. This repository is the complete source for its website — built on Astro 5 + Tailwind 4 with React 19 islands for interactivity, shipping mostly static HTML with near-zero JavaScript. The Scope section below details what is included (public site, Visual CMS, AI chatbot, SEO/AEO, security and email).
+
+## Screenshots
+
+**Homepage**
+
+![Homepage](./screenshots/homepage.png)
+
+**Services**
+
+![Services](./screenshots/services.png)
+
+**AI chatbot (lead capture)**
+
+![Chatbot](./screenshots/chatbot.png)
+
+**Visual CMS dashboard** — _screenshot coming soon; the dashboard is being polished._
 
 ## Scope
 
 - **Public website.** A dark, glass-morphism B2B site with file-based routing: Home, Services, About, Portfolio, Process, Contact, Capabilities Statement, Contracts, Insights (blog), Privacy, Terms, Admin, and a Success/confirmation page. Built with Astro 5 + Tailwind 4, mounting React 19 islands only where interactivity is needed (CMS dashboard, chat widget, portfolio loader); everything else ships as static HTML with near-zero JavaScript.
-- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`, ~100 KB).** Instead of adopting a hosted headless CMS, the site ships a custom visual, click-to-edit CMS on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
+- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
 - **Graceful content layer (`src/utils/content.ts`).** Every page pulls copy through `getPageContent()` with hardcoded fallbacks, so the site renders correctly even if Supabase or the CMS is unreachable. No blank pages when the database is down.
 - **AI chatbot with lead capture (`src/components/ChatWidget.jsx` + `netlify/functions/chat-api.js`).** An OpenAI/DeepSeek-backed assistant that logs conversations and captures qualified leads (name, email, company, summary) into Supabase, with lead-extraction (`lib/extractLead.js`) and lead-email (`lib/sendLeadEmail.js`) helpers.
 - **Security hardening (audit-driven, layered).** A Playwright-driven audit took the site from 78 to 98 and the chatbot from 20 to 100. Defenses span client, server, and database: CSP and security headers (production via `netlify.toml`, dev parity via `src/middleware.ts`), XSS sanitization via DOM text-content encoding, server-side input validation with HTML-entity encoding, in-memory rate limiting (20 req/min/IP), message-history and length caps, environment-based logging that strips PII in production, an admin auth gate, and prompt-injection hardening (Layer A: system/guard prompts loaded from Netlify Blobs so they stay out of source control and env vars; Layer B: user-message spotlighting via `<user_input>` delimiters plus output validation that rejects fabricated leads).

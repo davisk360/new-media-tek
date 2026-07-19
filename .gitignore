@@ -48,6 +48,7 @@ send-*.ps1
 
 # Tooling artifacts
 .kombai/
+.playwright-mcp/
 
 # Session logs / scratch notes
 CIPHER_SESSION_LOG.md
