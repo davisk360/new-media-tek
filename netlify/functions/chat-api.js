@@ -3,6 +3,7 @@ const { createClient } = require("@supabase/supabase-js");
 const { extractLead, cleanReply } = require("./lib/extractLead");
 const { sendLeadEmail } = require("./lib/sendLeadEmail");
 const { checkRateLimit } = require("./lib/rateLimit");
+const { connectLambda, getStore } = require("@netlify/blobs");
 
 // Sanitize text to prevent XSS in stored data
 function sanitizeText(text) {
@@ -52,6 +53,25 @@ function validateMessages(messages) {
       role: ['user', 'assistant'].includes(m.role) ? m.role : 'user',
       content: sanitizeText(m.content)
     }));
+}
+
+// Netlify Blobs prompt cache (Lambda containers may be reused across invocations).
+// In Lambda compatibility mode, the Blobs context is NOT auto-configured, so
+// connectLambda(event) must be called before getStore on first use.
+let cachedChatPrompts = null;
+async function loadChatPrompts(event) {
+  if (cachedChatPrompts) return cachedChatPrompts;
+  connectLambda(event);
+  const store = getStore("chat-prompts");
+  const [systemPrompt, guardPrompt] = await Promise.all([
+    store.get("system_prompt"),
+    store.get("guard_prompt"),
+  ]);
+  cachedChatPrompts = {
+    systemPrompt: systemPrompt || undefined,
+    guardPrompt: guardPrompt || undefined,
+  };
+  return cachedChatPrompts;
 }
 
 exports.handler = async (event, context) => {
@@ -138,16 +158,25 @@ exports.handler = async (event, context) => {
 
     const openai = new OpenAI({ apiKey, baseURL });
 
-    // Layer A: Load system + guard prompts from environment variables (kept out of
-    // source control to reduce extraction reconnaissance). See .env / Netlify env vars.
-    // Values are base64-encoded to survive special chars (quotes, newlines, arrows)
-    // across CLI/shell/env-var transit; decode to UTF-8 here.
-    const decodePrompt = (v) => (v ? Buffer.from(v, "base64").toString("utf-8") : undefined);
-    const systemPrompt = decodePrompt(process.env.CHAT_SYSTEM_PROMPT);
-    const guardPrompt = decodePrompt(process.env.CHAT_GUARD_PROMPT);
+    // Layer A: Load system + guard prompts from Netlify Blobs (kept out of source
+    // control AND out of env vars, to stay under the AWS Lambda 4KB env limit in
+    // Lambda compatibility mode). Store: "chat-prompts" / keys: system_prompt,
+    // guard_prompt. Populated via `netlify blobs:set` (see CHATBOT-SECURITY.md).
+    let systemPrompt, guardPrompt;
+    try {
+      const prompts = await loadChatPrompts(event);
+      systemPrompt = prompts.systemPrompt;
+      guardPrompt = prompts.guardPrompt;
+    } catch (blobErr) {
+      console.error("[ERROR] Failed to load chat prompts from Netlify Blobs:", blobErr.message);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Chat service not configured" }),
+      };
+    }
 
     if (!systemPrompt) {
-      console.error("[ERROR] CHAT_SYSTEM_PROMPT environment variable not set");
+      console.error("[ERROR] system_prompt not found in Netlify Blobs store 'chat-prompts'");
       return {
         statusCode: 500,
         body: JSON.stringify({ error: "Chat service not configured" }),
