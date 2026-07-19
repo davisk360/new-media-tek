@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import VISUAL_CMS_Dashboard from './VISUAL_CMS_Dashboard.jsx';
+import supabase from '../utils/supabaseClient.js';
 
 const CMSAuth = () => {
   const [email, setEmail] = useState('');
@@ -10,12 +11,25 @@ const CMSAuth = () => {
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check for existing auth on mount
+  // Check for an existing Supabase Auth session on mount, and subscribe to
+  // auth state changes so sign-in/sign-out elsewhere is reflected here.
   useEffect(() => {
-    const authToken = localStorage.getItem('cms_auth_token');
-    if (authToken) {
-      setIsAuthenticated(true);
+    if (!supabase) {
+      setError('Supabase is not configured.');
+      return;
     }
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e) => {
@@ -23,23 +37,22 @@ const CMSAuth = () => {
     setLoading(true);
     setError('');
 
+    if (!supabase) {
+      setError('Supabase is not configured.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Simple authentication - in production, use proper JWT/auth service
-      const adminEmail = import.meta.env.PUBLIC_CMS_ADMIN_EMAIL || 'admin@newmediatek.net';
-      const adminPassword = import.meta.env.PUBLIC_CMS_ADMIN_PASSWORD;
-      
-      if (!adminPassword) {
-        setError('CMS password not configured.');
-        return;
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message || 'Invalid credentials');
       }
-      
-      if (email === adminEmail && password === adminPassword) {
-        // Store auth token in localStorage
-        localStorage.setItem('cms_auth_token', 'cms_admin_token');
-        setIsAuthenticated(true);
-      } else {
-        setError('Invalid credentials');
-      }
+      // On success, onAuthStateChange fires and sets isAuthenticated.
     } catch (error) {
       setError('Login failed');
     } finally {
@@ -55,8 +68,10 @@ const CMSAuth = () => {
     setShowPassword(prev => !prev);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('cms_auth_token');
+  const handleLogout = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     setIsAuthenticated(false);
     setEmail('');
     setPassword('');
@@ -180,13 +195,7 @@ const CMSAuth = () => {
         
         {import.meta.env.DEV && (
           <div className="text-center text-xs text-gray-400 mt-4 p-2 bg-gray-50 rounded">
-            <details>
-              <summary className="cursor-pointer hover:text-gray-600">Dev Credentials</summary>
-              <div className="mt-2 space-y-1">
-                <p>Email: {import.meta.env.PUBLIC_CMS_ADMIN_EMAIL || 'admin@newmediatek.net'}</p>
-                <p>Password: (set via PUBLIC_CMS_ADMIN_PASSWORD env var)</p>
-              </div>
-            </details>
+            Sign in with the CMS admin account created in Supabase Auth.
           </div>
         )}
       </div>

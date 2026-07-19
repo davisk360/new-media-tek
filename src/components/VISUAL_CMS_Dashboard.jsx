@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { 
+import supabase from '../utils/supabaseClient.js';
+import {
   Home, 
   Users, 
   Briefcase, 
@@ -98,12 +98,8 @@ const COMMON_ICONS = [
   { name: 'phone', label: 'Contact/Communication', Icon: Phone },
 ];
 
-const supabase = import.meta.env.PUBLIC_SUPABASE_URL && import.meta.env.PUBLIC_SUPABASE_ANON_KEY 
-  ? createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    )
-  : null;
+// Shared Supabase client (imported at the top of the file). The same instance
+// is used by CMSAuth so the authenticated session from sign-in is visible here.
 
 // Add New Page Form Component
 const AddNewPageForm = ({ onSubmit, onCancel }) => {
@@ -1146,10 +1142,14 @@ const VISUAL_CMS_Dashboard = () => {
 
       if (error) throw error;
 
-      // Trigger Netlify rebuild via build hook
-      const buildHookUrl = 'https://api.netlify.com/build_hooks/6965a668c7e08157c97967a4';
-      const response = await fetch(buildHookUrl, { method: 'POST' });
-      
+      // Trigger Netlify rebuild via the server-side cms-publish function (the
+      // build hook URL is a server-only env var, never exposed to the client).
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/.netlify/functions/cms-publish', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+
       if (response.ok) {
         alert('✅ Content saved and site rebuild triggered!\n\nChanges will be live in ~1-2 minutes.');
       } else {
@@ -1749,8 +1749,8 @@ const VISUAL_CMS_Dashboard = () => {
               <h1 className="text-xl font-semibold text-gray-900">Visual CMS</h1>
             </div>
             <button
-              onClick={() => {
-                localStorage.removeItem('cms_auth_token');
+              onClick={async () => {
+                if (supabase) await supabase.auth.signOut();
                 window.location.reload();
               }}
               className="px-3 py-1.5 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 flex items-center gap-2"
