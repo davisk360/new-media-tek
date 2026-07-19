@@ -17,6 +17,30 @@ function sanitizeText(text) {
     .substring(0, 2000); // Max length limit
 }
 
+// Escape HTML for safe interpolation into email HTML bodies
+function escapeHtml(input) {
+  if (input == null) return '';
+  return String(input)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// Strip CR/LF to prevent email header injection in subject/reply-to fields
+function stripNewlines(input) {
+  if (input == null) return '';
+  return String(input).replace(/[\r\n]+/g, ' ').trim();
+}
+
+// Validate email format
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 254;
+}
+
 // Validate and sanitize messages array
 function validateMessages(messages) {
   if (!Array.isArray(messages)) return [];
@@ -25,7 +49,7 @@ function validateMessages(messages) {
     .slice(-20) // Only keep last 20 messages to prevent abuse
     .filter(m => m && typeof m === 'object' && m.role && m.content)
     .map(m => ({
-      role: ['user', 'assistant', 'system'].includes(m.role) ? m.role : 'user',
+      role: ['user', 'assistant'].includes(m.role) ? m.role : 'user',
       content: sanitizeText(m.content)
     }));
 }
@@ -114,92 +138,42 @@ exports.handler = async (event, context) => {
 
     const openai = new OpenAI({ apiKey, baseURL });
 
-    const systemPrompt = `
-You are the Senior Architect Assistant for 'New Media Tek'.
+    // Layer A: Load system + guard prompts from environment variables (kept out of
+    // source control to reduce extraction reconnaissance). See .env / Netlify env vars.
+    // Values are base64-encoded to survive special chars (quotes, newlines, arrows)
+    // across CLI/shell/env-var transit; decode to UTF-8 here.
+    const decodePrompt = (v) => (v ? Buffer.from(v, "base64").toString("utf-8") : undefined);
+    const systemPrompt = decodePrompt(process.env.CHAT_SYSTEM_PROMPT);
+    const guardPrompt = decodePrompt(process.env.CHAT_GUARD_PROMPT);
 
-COMPANY PROFILE:
-- Senior .NET Architect-led agency (15+ years Fortune 500 experience)
-- Data Solutions Developer with ML.NET and Power BI expertise
-- AI-accelerated delivery
-- US-based enterprise development
+    if (!systemPrompt) {
+      console.error("[ERROR] CHAT_SYSTEM_PROMPT environment variable not set");
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Chat service not configured" }),
+      };
+    }
 
-SERVICES:
-- Custom .NET Applications (ASP.NET Core MVC, EF Core 10, React 19, Angular 21)
-- REST APIs & Microservices (gRPC, Redis caching)
-- Legacy Modernization (.NET Framework 2.0-4.8 → .NET 10)
-- Advanced Data Solutions (ML.NET 5.0, Power BI Embedded, data architecture)
-- UX/UI Design (React 19, Angular 21, Blazor)
-- Cloud DevOps (Azure Functions, AWS Lambda, Docker/Kubernetes)
+    // Layer B: Spotlighting - wrap user messages in <user_input> delimiters so the
+    // model treats them as untrusted data, not instructions (Microsoft research defense).
+    const spotlightedMessages = messages.map((m) => ({
+      role: m.role,
+      content: m.role === "user"
+        ? `<user_input>\n${m.content}\n</user_input>`
+        : m.content,
+    }));
 
-GOAL: Qualify leads → capture EMAIL and COMPANY NAME.
-
-RESPONSE RULES:
-- MAX 2 sentences
-- NO preamble ("Great question!", "I'd be happy to...")
-- NO bullet lists or multiple options
-- ONE question per response
-- Ask for email and company name only after understanding their need
-
-STRICT CONSTRAINTS:
-- Do NOT invent company facts (team size, pricing, timelines, past clients)
-- If unsure about company details, say "I'd need to confirm that with our team"
-- Never guess—deflect to consultation
-
-FORBIDDEN:
-- Explaining your process unprompted
-- Offering information not explicitly asked
-- Multiple questions in one response
-
-===EXAMPLES===
-
-User: "We have an old WebForms app"
-Assistant: "WebForms modernization is our specialty. What .NET Framework version is it running?"
-
-User: "4.5, it's our internal ERP"
-Assistant: "EF6 on 4.5—common pattern. Timeline for migration?"
-
-User: "Q3 ideally"
-Assistant: "Q3 works. What's your email and company name?"
-
-User: "mike@acme.com, Acme Corp"
-Assistant: "Got it—expect contact at mike@acme.com within 24 hours.
-***JSON_START***
-{"LEAD_CAPTURED":true,"name":"Mike","email":"mike@acme.com","company":"Acme Corp","summary":"WebForms ERP migration, .NET 4.5, Q3 timeline"}
-***JSON_END***"
-
-User: "sarah@techfirm.io"
-Assistant: "Thanks Sarah. What company are you with?"
-
-User: "TechFirm Inc"
-Assistant: "Got it—our Senior Architect and Data Solutions Developer will reach out to sarah@techfirm.io within 24 hours.
-***JSON_START***
-{"LEAD_CAPTURED":true,"name":"Sarah","email":"sarah@techfirm.io","company":"TechFirm Inc","summary":"Inquiry - needs qualification"}
-***JSON_END***"
-
-User: "How many people on your team?"
-Assistant: "I'd need to confirm that with our team. Want me to have someone reach out with details?"
-
-User: "What's your hourly rate?"
-Assistant: "Depends on scope—our Senior Architect can discuss pricing. What's your email and company?"
-
-User: "Just looking around"
-Assistant: "No problem. Reach out when you have a .NET or data project to discuss."
-
-===END EXAMPLES===
-
-LEAD CAPTURE FORMAT (only when email AND company provided):
-***JSON_START***
-{"LEAD_CAPTURED":true,"name":"[if stated, else null]","email":"[exact email]","company":"[company name]","summary":"[tech + timeline]"}
-***JSON_END***
-    `;
+    const apiMessages = guardPrompt
+      ? [{ role: "system", content: systemPrompt }, ...spotlightedMessages, { role: "system", content: guardPrompt }]
+      : [{ role: "system", content: systemPrompt }, ...spotlightedMessages];
 
     log("[DEBUG] Making API call to:", model);
     let completion;
     try {
       completion = await openai.chat.completions.create({
         model: model,
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        temperature: 0.7,
+        messages: apiMessages,
+        temperature: 0.3,
       });
       log("[DEBUG] API call successful");
     } catch (apiError) {
@@ -223,15 +197,30 @@ LEAD CAPTURE FORMAT (only when email AND company provided):
     const leadData = extractLead(rawReply, lastUserMessage);
     log("[DEBUG] Lead extraction result:", leadData ? 'Lead captured' : 'No lead');
 
+    // Layer B: Output validation - reject fabricated leads. The captured email must
+    // actually appear in the user's message content (not model-fabricated).
+    let validatedLead = leadData;
+    if (leadData && leadData.email) {
+      const allUserContent = messages
+        .filter((m) => m.role === "user")
+        .map((m) => m.content)
+        .join(" ")
+        .toLowerCase();
+      if (!allUserContent.includes(leadData.email.toLowerCase())) {
+        log("[DEBUG] Rejected lead: email not present in user messages");
+        validatedLead = null;
+      }
+    }
+
     // Construct Transcript (needed for both email and Supabase)
     const transcript = messages
       .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
       .join("\n");
 
     // Send Email via shared utility (Lead Alerts)
-    if (leadData) {
-      leadData.transcript = transcript;
-      const emailSent = await sendLeadEmail('chatbot', leadData);
+    if (validatedLead && isValidEmail(validatedLead.email)) {
+      validatedLead.transcript = transcript;
+      const emailSent = await sendLeadEmail('chatbot', validatedLead);
       log("[DEBUG] Lead email result:", emailSent ? 'SUCCESS' : 'FAILED');
     }
 
@@ -247,13 +236,13 @@ LEAD CAPTURE FORMAT (only when email AND company provided):
       try {
         await supabase.from("chat_logs").insert([
           {
-            lead_name: leadData ? sanitizeText(leadData.name) : null,
-            lead_email: leadData ? sanitizeText(leadData.email) : null,
-            lead_company: leadData ? sanitizeText(leadData.company) : null,
-            lead_summary: leadData ? sanitizeText(leadData.summary) : null,
+            lead_name: validatedLead ? sanitizeText(validatedLead.name) : null,
+            lead_email: validatedLead ? sanitizeText(validatedLead.email) : null,
+            lead_company: validatedLead ? sanitizeText(validatedLead.company) : null,
+            lead_summary: validatedLead ? sanitizeText(validatedLead.summary) : null,
             transcript: sanitizeText(transcript),
             last_reply: sanitizeText(reply),
-            is_lead: !!leadData,
+            is_lead: !!validatedLead,
           },
         ]);
       } catch (dbError) {
@@ -271,11 +260,7 @@ LEAD CAPTURE FORMAT (only when email AND company provided):
     console.error("[ERROR] Stack:", error.stack);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: "Failed to process request",
-        details: error.message,
-        stack: error.stack?.substring(0, 500)
-      }),
+      body: JSON.stringify({ error: "Failed to process request" }),
     };
   }
 };
@@ -285,23 +270,40 @@ async function handleContactForm(data) {
   console.log("Processing contact form submission:", data);
 
   try {
-    console.log("Sending email via Netlify Email integration");
+    // Sanitize all inputs: strip newlines (header-injection prevention) and cap length
+    const firstName = stripNewlines(data.firstName).substring(0, 100);
+    const lastName = stripNewlines(data.lastName).substring(0, 100);
+    const email = stripNewlines(data.email).substring(0, 254);
+    const phone = stripNewlines(data.phone || "").substring(0, 30);
+    const company = stripNewlines(data.company).substring(0, 100);
+    const projectType = stripNewlines(data.projectType).substring(0, 100);
+    const timeline = stripNewlines(data.timeline || "").substring(0, 50);
+    const message = stripNewlines(data.message).substring(0, 2000);
+    const newsletter = !!data.newsletter;
 
-    // Prepare email content
+    // Validate email format before sending
+    if (!isValidEmail(email)) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Invalid email address" }),
+      };
+    }
+
+    // Prepare email content (plain text - no HTML, newlines stripped)
     const emailContent = `
 New Consultation Request from New Media Tek Website
 
 Contact Information:
-- Name: ${data.firstName} ${data.lastName}
-- Email: ${data.email}
-- Phone: ${data.phone || "Not provided"}
-- Company: ${data.company}
+- Name: ${firstName} ${lastName}
+- Email: ${email}
+- Phone: ${phone || "Not provided"}
+- Company: ${company}
 
 Project Details:
-- Project Type: ${data.projectType}
-- Timeline: ${data.timeline}
-- Message: ${data.message}
-- Newsletter: ${data.newsletter ? "Yes" : "No"}
+- Project Type: ${projectType}
+- Timeline: ${timeline}
+- Message: ${message}
+- Newsletter: ${newsletter ? "Yes" : "No"}
 
 Submitted: ${new Date().toLocaleString()}
 `;
@@ -317,28 +319,26 @@ Submitted: ${new Date().toLocaleString()}
     
     const verifiedSender = process.env.SENDGRID_VERIFIED_SENDER || "contact@newmediatek.net";
     
-    console.log("Sending contact form email via SendGrid to: admin@newmediatek.net");
-    
     await sgMail.send({
       to: "admin@newmediatek.net",
       from: verifiedSender,
-      replyTo: data.email,
-      subject: `📋 New Consultation Request: ${data.company}`,
+      replyTo: email,
+      subject: `📋 New Consultation Request: ${company}`,
       text: emailContent,
       html: `<h2>📋 New Consultation Request</h2>
 <h3>Contact Information:</h3>
 <ul>
-<li><strong>Name:</strong> ${data.firstName} ${data.lastName}</li>
-<li><strong>Email:</strong> ${data.email}</li>
-<li><strong>Phone:</strong> ${data.phone || "Not provided"}</li>
-<li><strong>Company:</strong> ${data.company}</li>
+<li><strong>Name:</strong> ${escapeHtml(firstName)} ${escapeHtml(lastName)}</li>
+<li><strong>Email:</strong> ${escapeHtml(email)}</li>
+<li><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</li>
+<li><strong>Company:</strong> ${escapeHtml(company)}</li>
 </ul>
 <h3>Project Details:</h3>
 <ul>
-<li><strong>Project Type:</strong> ${data.projectType}</li>
-<li><strong>Timeline:</strong> ${data.timeline}</li>
-<li><strong>Message:</strong> ${data.message}</li>
-<li><strong>Newsletter:</strong> ${data.newsletter ? "Yes" : "No"}</li>
+<li><strong>Project Type:</strong> ${escapeHtml(projectType)}</li>
+<li><strong>Timeline:</strong> ${escapeHtml(timeline)}</li>
+<li><strong>Message:</strong> ${escapeHtml(message)}</li>
+<li><strong>Newsletter:</strong> ${newsletter ? "Yes" : "No"}</li>
 </ul>
 <p><em>Submitted: ${new Date().toLocaleString()}</em></p>`
     });
@@ -357,10 +357,7 @@ Submitted: ${new Date().toLocaleString()}
     console.error("Full error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: "Failed to send email",
-        details: error.message,
-      }),
+      body: JSON.stringify({ error: "Failed to send email" }),
     };
   }
 }
