@@ -34,6 +34,7 @@ CMS-SETUP.md
 *.key
 *.pem
 supabase-cms-schema.sql
+setup-portfolio-cms.sql
 dkim-record.json
 add-dkim.*
 fix-mx.mjs
