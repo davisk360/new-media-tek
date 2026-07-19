@@ -44,3 +44,38 @@ send-*.ps1
 .env.local
 .env.development
 .env.staging
+
+# Tooling artifacts
+.kombai/
+
+# Session logs / scratch notes
+CIPHER_SESSION_LOG.md
+career-assessment-formatted.txt
+
+# Prototype / pre-Astro artifact
+new_media_tek_landing_page.html
+
+# Test scratch files
+test-database-connection.sql
+test-password-toggle.js
+test-visual-cms-workflow.js
+WORKFLOW-TEST-RESULTS.md
+WORKFLOW-TESTING-CHECKLIST.md
+
+# Defunct email-setup docs (Namecheap didn't work; using Google Workspace)
+NAMECHEAP-EMAIL-SETUP.md
+EMAIL-CONFIG-TEST-RESULTS.md
+ENV-SETUP-REFERENCE.md
+
+# Internal setup/feature guides (not showcase material; kept locally only)
+CHATBOT-SECURITY.md
+SECURITY-FIXES.md
+CMS-SETUP-GUIDE.md
+COMPLETE-EDITING-GUIDE.md
+ENHANCED-FEATURES-GUIDE.md
+LIVE-PREVIEW-FEATURE-GUIDE.md
+VISUAL-CMS-SETUP.md
+
+# Email test artifacts (keep emails/contact-form/ which is used by the Netlify email plugin)
+emails/test-email.html
+emails/test-email/
