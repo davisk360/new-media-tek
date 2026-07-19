@@ -25,7 +25,7 @@ New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; 
 ## Scope
 
 - **Public website.** A dark, glass-morphism B2B site with file-based routing: Home, Services, About, Portfolio, Process, Contact, Capabilities Statement, Contracts, Insights (blog), Privacy, Terms, Admin, and a Success/confirmation page. Built with Astro 5 + Tailwind 4, mounting React 19 islands only where interactivity is needed (CMS dashboard, chat widget, portfolio loader); everything else ships as static HTML with near-zero JavaScript.
-- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
+- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by Supabase (`visual_content` / `visual_media` tables) and the SQL schema in `visual-cms-schema.sql`.
 - **Graceful content layer (`src/utils/content.ts`).** Every page pulls copy through `getPageContent()` with hardcoded fallbacks, so the site renders correctly even if Supabase or the CMS is unreachable. No blank pages when the database is down.
 - **AI chatbot with lead capture (`src/components/ChatWidget.jsx` + `netlify/functions/chat-api.js`).** An OpenAI/DeepSeek-backed assistant that logs conversations and captures qualified leads (name, email, company, summary) into Supabase, with lead-extraction (`lib/extractLead.js`) and lead-email (`lib/sendLeadEmail.js`) helpers.
 - **Security hardening (audit-driven, layered).** A Playwright-driven audit took the site from 78 to 98 and the chatbot from 20 to 100. Defenses span client, server, and database: CSP and security headers (production via `netlify.toml`, dev parity via `src/middleware.ts`), XSS sanitization via DOM text-content encoding, server-side input validation with HTML-entity encoding, in-memory rate limiting (20 req/min/IP), message-history and length caps, environment-based logging that strips PII in production, an admin auth gate, and prompt-injection hardening (Layer A: system/guard prompts loaded from Netlify Blobs so they stay out of source control and env vars; Layer B: user-message spotlighting via `<user_input>` delimiters plus output validation that rejects fabricated leads).
@@ -41,7 +41,7 @@ New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; 
 | Frontend | Astro 5 (islands) + Tailwind 4 | Content-driven site that ships mostly static HTML; React only where interactivity is needed |
 | Interactivity | React 19 islands | CMS dashboard, chat widget, portfolio loader |
 | CMS | Custom Visual CMS on Supabase (Postgres) | Visual click-to-edit UX for non-technical editors; no vendor lock-in, full control |
-| Backend | Netlify Functions | Chat API, CMS API, contact handler, email helpers |
+| Backend | Netlify Functions | Chat API, contact handler, email helpers |
 | Data | Supabase (Postgres + auth) | CMS content, chat logs, lead capture |
 | AI | OpenAI / DeepSeek | Chatbot |
 | Chat prompts | Netlify Blobs (`chat-prompts` store) | System + guard prompts kept out of source control and env vars; read at runtime via `@netlify/blobs` (`connectLambda` + `getStore`), which also cleared the AWS Lambda 4KB env limit |
@@ -76,7 +76,7 @@ src/
 ├── scripts/           # contact-form.ts (client validation)
 ├── utils/             # content.ts (CMS fetch + fallbacks), cms.js
 └── middleware.ts      # Dev security headers
-netlify/functions/     # chat-api.js, cms-api.js, contact-form.js, lib/ (rateLimit, extractLead, sendLeadEmail)
+netlify/functions/     # chat-api.js, contact-form.js, lib/ (rateLimit, extractLead, sendLeadEmail)
 netlify.toml           # Build, security headers, functions, email plugin
 visual-cms-schema.sql  # Supabase schema for the Visual CMS
 ```
