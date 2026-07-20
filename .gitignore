@@ -46,6 +46,10 @@ send-*.ps1
 .env.development
 .env.staging
 
+# Local token files (never commit secrets to the repo)
+*-token.txt
+*.secret.txt
+
 # Tooling artifacts
 .kombai/
 .playwright-mcp/
