@@ -15,6 +15,8 @@ name: CMS Publish Deploy
 on:
   repository_dispatch:
     types: [cms-publish]
+  # Allow manual triggering from the Actions tab (re-deploys + test runs).
+  workflow_dispatch:
 
 permissions:
   contents: read
