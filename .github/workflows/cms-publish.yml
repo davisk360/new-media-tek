@@ -1,0 +1,49 @@
+name: CMS Publish Deploy
+
+# Triggered by netlify/functions/cms-publish.js after a Supabase-Auth-validated
+# CMS publish. The function calls the GitHub repository_dispatch API with
+# event_type "cms-publish"; this workflow builds the site with Bun and deploys
+# to Netlify production via the CLI. This keeps the Netlify site NOT git-linked
+# (avoiding the private-repo single-contributor limit on the current plan) while
+# still making the CMS publish button rebuild the site end-to-end.
+#
+# To switch to a Netlify-native git build later (e.g. after upgrading to Pro and
+# linking the repo), unset GITHUB_DISPATCH_TOKEN on the Netlify site and set
+# NETLIFY_BUILD_HOOK; cms-publish.js will fall back to the build hook. This
+# workflow can then be disabled/removed.
+
+on:
+  repository_dispatch:
+    types: [cms-publish]
+
+permissions:
+  contents: read
+
+# Queue CMS publish deploys; don't cancel an in-flight one (content freshness).
+concurrency:
+  group: cms-publish-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build site
+        run: bun run build
+
+      - name: Deploy to Netlify production
+        # npx fetches netlify-cli on first run; netlify.toml in the repo root
+        # supplies the publish dir (dist) and functions dir (netlify/functions).
+        run: npx --yes netlify-cli@26 deploy --prod --message "CMS publish deploy (repository_dispatch)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
