@@ -1,10 +1,10 @@
 # New Media Tek
 
-> The website for New Media Tek, a senior .NET Architect-led B2B software consultancy.
+> The website for New Media Tek, a B2B software consultancy co-founded with a senior .NET architect. This repository contains the site, CMS, chatbot, and infrastructure I designed and built.
 >
 > **Live:** https://newmediatek.net/
 
-New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; AI-augmented development is one of its service lines. This repository is the complete source for its website — built on Astro 5 + Tailwind 4 with React 19 islands for interactivity, shipping mostly static HTML with near-zero JavaScript. The Scope section below details what is included (public site, Visual CMS, AI chatbot, SEO/AEO, security and email).
+New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B clients. I built the entire web presence and supporting infrastructure: the Astro 5 + Tailwind 4 site with React 19 islands for interactivity, a custom Visual CMS, an AI chatbot with lead capture, the security stack, email deliverability, and SEO/AEO. The site ships mostly static HTML with near-zero JavaScript; React mounts only where interactivity is needed. The Scope section below details what is included.
 
 ## Screenshots
 
@@ -25,14 +25,15 @@ New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; 
 ## Scope
 
 - **Public website.** A dark, glass-morphism B2B site with file-based routing: Home, Services, About, Portfolio, Process, Contact, Capabilities Statement, Contracts, Insights (blog), Privacy, Terms, Admin, and a Success/confirmation page. Built with Astro 5 + Tailwind 4, mounting React 19 islands only where interactivity is needed (CMS dashboard, chat widget, portfolio loader); everything else ships as static HTML with near-zero JavaScript.
-- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin` via Supabase Auth, backed by Supabase (`visual_content` / `visual_media` tables) with row-level security (anon read-only, authenticated writes) and the SQL schema in `visual-cms-schema.sql`.
+- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
 - **Graceful content layer (`src/utils/content.ts`).** Every page pulls copy through `getPageContent()` with hardcoded fallbacks, so the site renders correctly even if Supabase or the CMS is unreachable. No blank pages when the database is down.
 - **AI chatbot with lead capture (`src/components/ChatWidget.jsx` + `netlify/functions/chat-api.js`).** An OpenAI/DeepSeek-backed assistant that logs conversations and captures qualified leads (name, email, company, summary) into Supabase, with lead-extraction (`lib/extractLead.js`) and lead-email (`lib/sendLeadEmail.js`) helpers.
-- **Security hardening (audit-driven, layered).** A Playwright-driven audit took the site from 78 to 98 and the chatbot from 20 to 100. Defenses span client, server, and database: CSP and security headers (production via `netlify.toml`, dev parity via `src/middleware.ts`), XSS sanitization via DOM text-content encoding, server-side input validation with HTML-entity encoding, in-memory rate limiting (20 req/min/IP), message-history and length caps, environment-based logging that strips PII in production, a Supabase Auth admin gate with row-level security (anon read-only; CMS writes require an authenticated session), and prompt-injection hardening (Layer A: system/guard prompts loaded from Netlify Blobs so they stay out of source control and env vars; Layer B: user-message spotlighting via `<user_input>` delimiters plus output validation that rejects fabricated leads).
+- **Security hardening (audit-driven, layered).** A Playwright-driven audit took the site from 78 to 98 and the chatbot from 20 to 100. Defenses span client, server, and database: CSP and security headers (production via `netlify.toml`, dev parity via `src/middleware.ts`), XSS sanitization via DOM text-content encoding, server-side input validation with HTML-entity encoding, in-memory rate limiting (20 req/min/IP), message-history and length caps, environment-based logging that strips PII in production, an admin auth gate, and prompt-injection hardening (Layer A: system/guard prompts loaded from Netlify Blobs so they stay out of source control and env vars; Layer B: user-message spotlighting via `<user_input>` delimiters plus output validation that rejects fabricated leads).
 - **Secure contact form.** An Astro API route (`src/pages/api/contact.ts`) with server-side validation, sanitization, and email/phone format checks, paired with client-side validation in `src/scripts/contact-form.ts`.
 - **Email stack.** Google Workspace hosts the contact/lead mailbox; SendGrid + Nodemailer send transactional and lead-notification email from Netlify Functions; the Netlify email plugin renders the templates (`emails/contact-form/`). DKIM/MX/SPF are configured for deliverability.
+- **SEO and structured data.** `@astrojs/sitemap`, Organization / WebSite / AboutPage / BreadcrumbList schema.org JSON-LD, and a single source of truth for business info in `src/config/site.ts`.
 - **Insights blog.** Dynamic `[slug].astro` routing backed by `src/data/posts.ts`.
-- **Content, SEO, and Answer Engine Optimization.** Ad copy across all pages; per-page meta descriptions, canonical URLs, Open Graph and Twitter Card tags; `@astrojs/sitemap`; a single source of truth for business info in `src/config/site.ts`; and schema.org JSON-LD structured data on every key page — `Organization`, `WebSite`, `ProfessionalService` with an `OfferCatalog` of the service lines, `FAQPage` with `Question`/`acceptedAnswer` pairs (for answer-engine citation), `AboutPage`, and `BreadcrumbList` — so the site is readable by Google AI Overviews, Perplexity, and ChatGPT, not just human visitors.
+- **Content, SEO, and Answer Engine Optimization.** Ad copy across all pages; per-page meta descriptions, canonical URLs, Open Graph and Twitter Card tags; `@astrojs/sitemap`; and schema.org JSON-LD structured data on every key page — `Organization`, `WebSite`, `ProfessionalService` with an `OfferCatalog` of the service lines, `FAQPage` with `Question`/`acceptedAnswer` pairs (for answer-engine citation), `AboutPage`, and `BreadcrumbList` — so the site is readable by Google AI Overviews, Perplexity, and ChatGPT, not just human visitors.
 
 ## Architecture at a glance
 
@@ -41,13 +42,12 @@ New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; 
 | Frontend | Astro 5 (islands) + Tailwind 4 | Content-driven site that ships mostly static HTML; React only where interactivity is needed |
 | Interactivity | React 19 islands | CMS dashboard, chat widget, portfolio loader |
 | CMS | Custom Visual CMS on Supabase (Postgres) | Visual click-to-edit UX for non-technical editors; no vendor lock-in, full control |
-| Backend | Netlify Functions | Chat API, CMS publish handler, contact handler, email helpers |
+| Backend | Netlify Functions | Chat API, CMS API, contact handler, email helpers |
 | Data | Supabase (Postgres + auth) | CMS content, chat logs, lead capture |
 | AI | OpenAI / DeepSeek | Chatbot |
 | Chat prompts | Netlify Blobs (`chat-prompts` store) | System + guard prompts kept out of source control and env vars; read at runtime via `@netlify/blobs` (`connectLambda` + `getStore`), which also cleared the AWS Lambda 4KB env limit |
 | Email | Google Workspace (mailbox) + SendGrid/Nodemailer (transactional) + Netlify email plugin | Contact/lead mailbox and transactional sending from functions; DKIM/MX/SPF configured |
 | Hosting | Netlify | `netlify.toml` drives build, headers, functions |
-| Publish/CI | GitHub Actions (`repository_dispatch` then `netlify deploy --prod`) | Site is CLI-deployed, not git-linked (private-repo single-contributor limit on the current plan); the auth'd `cms-publish.js` sends a dispatch event that triggers an Action to build and deploy |
 | Tooling | Bun, TypeScript | Fast installs, type safety |
 
 ## Key decisions
@@ -60,8 +60,6 @@ New Media Tek is a senior-led .NET consultancy serving Fortune 500 B2B clients; 
 6. **In-memory rate limiting, with the scale path noted.** `lib/rateLimit.js` uses an in-process store (fine for current traffic on Netlify Functions); the docs explicitly flag Redis as the path to distributed rate limiting at scale. The limitation is acknowledged, not hidden.
 7. **Dev/prod security-header parity.** Production headers live in `netlify.toml`; `src/middleware.ts` mirrors them in local dev so the security posture is the same in both environments.
 8. **Email deliverability built in, not bolted on.** Google Workspace hosts the contact/lead mailbox; SendGrid + Nodemailer and the Netlify email plugin handle transactional sending from functions; DKIM/MX/SPF are configured so contact and lead emails actually land in inboxes.
-9. **CMS authorization via Supabase Auth + RLS, not a static password.** The CMS dashboard signs in through Supabase Auth, and row-level security on the CMS tables allows anon reads (the public site and the build-time content fetch) but only authenticated writes. This keeps the service-role key out of the client, relies on rotating JWTs instead of a static secret, and enforces writes at the database (defense in depth). The publish/rebuild path is gated by a small auth'd Netlify Function (`cms-publish.js`) that validates the caller's Supabase JWT before triggering a rebuild (see decision 10).
-10. **CMS publish via a GitHub Actions hybrid, not a Netlify git build.** The Netlify site is CLI-deployed (not git-linked), because the current plan allows only one Git contributor on private repos and that slot is taken by another site. `cms-publish.js` sends a `repository_dispatch` event to GitHub, triggering `.github/workflows/cms-publish.yml` to build with Bun and run `netlify deploy --prod`. This keeps the publish button working end-to-end without a plan upgrade or making the repo public, and the workflow also supports manual `workflow_dispatch` runs from the Actions tab. Reversible: switch to a Netlify build hook after upgrading to Pro and git-linking the repo (no code change, just env-var swaps).
 
 ## Tech stack
 
@@ -79,7 +77,7 @@ src/
 ├── scripts/           # contact-form.ts (client validation)
 ├── utils/             # content.ts (CMS fetch + fallbacks), cms.js
 └── middleware.ts      # Dev security headers
-netlify/functions/     # chat-api.js, contact-form.js, lib/ (rateLimit, extractLead, sendLeadEmail)
+netlify/functions/     # chat-api.js, cms-api.js, contact-form.js, lib/ (rateLimit, extractLead, sendLeadEmail)
 netlify.toml           # Build, security headers, functions, email plugin
 visual-cms-schema.sql  # Supabase schema for the Visual CMS
 ```
@@ -103,7 +101,7 @@ bun run lint       # astro lint
 
 ## Build credits
 
-Designed, built, and deployed by Kelly Davis. Scope: site design and ad copy, the Astro + Tailwind + React-islands build, the custom Supabase-backed Visual CMS, the AI chatbot with lead capture, SEO and Answer Engine Optimization (JSON-LD structured data), the secure contact form, the Google Workspace + SendGrid/Nodemailer email stack with DKIM/MX/SPF, and the audit-driven security hardening (CSP/headers, XSS sanitization, rate limiting, prompt-injection defense with prompts stored in Netlify Blobs, and Supabase Auth + row-level security for CMS authorization).
+Co-founded with a senior .NET architect who provided domain expertise and service-line direction. I designed, built, and deployed the entire web presence and supporting infrastructure: site design and ad copy, the Astro + Tailwind + React-islands build, the custom Supabase-backed Visual CMS, the AI chatbot with lead capture, SEO and Answer Engine Optimization (JSON-LD structured data), the secure contact form, the Google Workspace + SendGrid/Nodemailer email stack with DKIM/MX/SPF, and the audit-driven security hardening (CSP/headers, XSS sanitization, rate limiting, and prompt-injection defense with prompts stored in Netlify Blobs).
 
 ## License
 
