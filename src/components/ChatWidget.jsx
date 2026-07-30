@@ -38,26 +38,6 @@ export default function ChatWidget() {
     return div.innerHTML;
   };
 
-  // Detect if user message contains an email
-  const containsEmail = (text) => {
-    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    return emailRegex.test(text);
-  };
-
-  // Detect if assistant response confirms lead capture
-  const isLeadConfirmation = (text) => {
-    const confirmationPhrases = [
-      "expect contact",
-      "within 24 hours",
-      "will reach out",
-      "will contact",
-      "got it",
-    ];
-    return confirmationPhrases.some((phrase) =>
-      text.toLowerCase().includes(phrase),
-    );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim() || isLoading || leadCaptured) return;
@@ -104,8 +84,8 @@ export default function ChatWidget() {
         { role: "assistant", content: data.reply },
       ]);
 
-      // Check if lead was captured (user provided email + assistant confirmed)
-      if (containsEmail(userMessage) && isLeadConfirmation(data.reply)) {
+      // Check if lead was captured (backend confirms via leadCaptured flag)
+      if (data.leadCaptured) {
         setTimeout(() => setLeadCaptured(true), 1500); // Slight delay for UX
       }
     } catch (error) {

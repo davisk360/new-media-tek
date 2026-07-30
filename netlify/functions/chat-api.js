@@ -58,9 +58,15 @@ function validateMessages(messages) {
 // Netlify Blobs prompt cache (Lambda containers may be reused across invocations).
 // In Lambda compatibility mode, the Blobs context is NOT auto-configured, so
 // connectLambda(event) must be called before getStore on first use.
+// TTL ensures prompt updates propagate to warm containers within 5 minutes.
 let cachedChatPrompts = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 async function loadChatPrompts(event) {
-  if (cachedChatPrompts) return cachedChatPrompts;
+  if (cachedChatPrompts && Date.now() - cacheTimestamp < CACHE_TTL_MS) {
+    return cachedChatPrompts;
+  }
   connectLambda(event);
   const store = getStore("chat-prompts");
   const [systemPrompt, guardPrompt] = await Promise.all([
@@ -71,6 +77,7 @@ async function loadChatPrompts(event) {
     systemPrompt: systemPrompt || undefined,
     guardPrompt: guardPrompt || undefined,
   };
+  cacheTimestamp = Date.now();
   return cachedChatPrompts;
 }
 
@@ -219,8 +226,8 @@ exports.handler = async (event, context) => {
     // Clean reply for user (remove JSON markers)
     const reply = cleanReply(rawReply);
     
-    // Get last user message for regex fallback
-    const lastUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    // Combine all user messages for regex fallback (lead info may span multiple turns)
+    const lastUserMessage = messages.filter(m => m.role === 'user').map(m => m.content).join(' ');
     
     // Extract lead using 2-check approach: AI JSON first, then regex fallback
     const leadData = extractLead(rawReply, lastUserMessage);
@@ -246,22 +253,45 @@ exports.handler = async (event, context) => {
       .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
       .join("\n");
 
-    // Send Email via shared utility (Lead Alerts)
+    // Supabase client (used for dedup check + logging)
+    const supabase = (process.env.PUBLIC_SUPABASE_URL && process.env.PUBLIC_SUPABASE_ANON_KEY)
+      ? createClient(process.env.PUBLIC_SUPABASE_URL, process.env.PUBLIC_SUPABASE_ANON_KEY)
+      : null;
+
+    // Send Email via shared utility (Lead Alerts) with 24h deduplication
+    let leadCaptured = false;
     if (validatedLead && isValidEmail(validatedLead.email)) {
-      validatedLead.transcript = transcript;
-      const emailSent = await sendLeadEmail('chatbot', validatedLead);
-      log("[DEBUG] Lead email result:", emailSent ? 'SUCCESS' : 'FAILED');
+      // Check for duplicate lead in the last 24 hours
+      let isDuplicate = false;
+      if (supabase) {
+        try {
+          const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+          const { data: existing } = await supabase
+            .from("chat_logs")
+            .select("id")
+            .eq("lead_email", validatedLead.email.toLowerCase())
+            .eq("is_lead", true)
+            .gte("created_at", since)
+            .limit(1);
+          isDuplicate = existing && existing.length > 0;
+        } catch (dedupErr) {
+          console.error("[WARN] Dedup check failed, sending anyway:", dedupErr.message);
+        }
+      }
+
+      if (!isDuplicate) {
+        validatedLead.transcript = transcript;
+        const emailSent = await sendLeadEmail('chatbot', validatedLead);
+        log("[DEBUG] Lead email result:", emailSent ? 'SUCCESS' : 'FAILED');
+        leadCaptured = true;
+      } else {
+        log("[DEBUG] Duplicate lead skipped:", validatedLead.email);
+        leadCaptured = true; // Still show confirmation to user
+      }
     }
 
     // Supabase Logging (Database Backup)
-    if (
-      process.env.PUBLIC_SUPABASE_URL &&
-      process.env.PUBLIC_SUPABASE_ANON_KEY
-    ) {
-      const supabase = createClient(
-        process.env.PUBLIC_SUPABASE_URL,
-        process.env.PUBLIC_SUPABASE_ANON_KEY,
-      );
+    if (supabase) {
       try {
         await supabase.from("chat_logs").insert([
           {
@@ -282,7 +312,7 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply }),
+      body: JSON.stringify({ reply, leadCaptured }),
     };
   } catch (error) {
     console.error("[ERROR] Main catch block:", error.message);
