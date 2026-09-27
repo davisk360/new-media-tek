@@ -1,5 +1,4 @@
 const { OpenAI } = require("openai");
-const { createAdminClient } = require("@insforge/sdk");
 const { extractLead, cleanReply } = require("./lib/extractLead");
 const { sendLeadEmail } = require("./lib/sendLeadEmail");
 const { checkRateLimit } = require("./lib/rateLimit");
@@ -253,15 +252,34 @@ exports.handler = async (event, context) => {
       .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
       .join("\n");
 
-    // InsForge admin client (used for dedup check + logging). The API key
+    // InsForge admin access (used for dedup check + logging). The API key
     // runs as project_admin, which bypasses RLS — required because chat_logs
     // deliberately has no SELECT policy (transcripts contain PII and must
-    // stay server-side).
-    const insforge = (process.env.INSFORGE_URL && process.env.INSFORGE_API_KEY)
-      ? createAdminClient({
-          baseUrl: process.env.INSFORGE_URL,
-          apiKey: process.env.INSFORGE_API_KEY,
-        })
+    // stay server-side). Plain fetch instead of the SDK keeps the function
+    // bundle small and avoids bundler issues with the SDK's schema deps.
+    const insforgeUrl = process.env.INSFORGE_URL || process.env.PUBLIC_INSFORGE_URL;
+    const insforgeKey = process.env.INSFORGE_API_KEY;
+    const insforge = insforgeUrl && insforgeKey
+      ? {
+          select: async (table, query) => {
+            const res = await fetch(`${insforgeUrl}/api/database/records/${table}?${query}`, {
+              headers: { Authorization: `Bearer ${insforgeKey}`, apikey: insforgeKey },
+            });
+            return res.ok ? res.json() : null;
+          },
+          insert: async (table, row) => {
+            const res = await fetch(`${insforgeUrl}/api/database/records/${table}`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${insforgeKey}`,
+                apikey: insforgeKey,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(row),
+            });
+            if (!res.ok) throw new Error(`InsForge insert failed: HTTP ${res.status}`);
+          },
+        }
       : null;
 
     // Send Email via shared utility (Lead Alerts) with 24h deduplication
@@ -272,14 +290,9 @@ exports.handler = async (event, context) => {
       if (insforge) {
         try {
           const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-          const { data: existing } = await insforge.database
-            .from("chat_logs")
-            .select("id")
-            .eq("lead_email", validatedLead.email.toLowerCase())
-            .eq("is_lead", true)
-            .gte("created_at", since)
-            .limit(1);
-          isDuplicate = existing && existing.length > 0;
+          const q = `select=id&lead_email=eq.${encodeURIComponent(validatedLead.email.toLowerCase())}&is_lead=eq.true&created_at=gte.${encodeURIComponent(since)}&limit=1`;
+          const existing = await insforge.select("chat_logs", q);
+          isDuplicate = Array.isArray(existing) && existing.length > 0;
         } catch (dedupErr) {
           console.error("[WARN] Dedup check failed, sending anyway:", dedupErr.message);
         }
@@ -299,17 +312,15 @@ exports.handler = async (event, context) => {
     // InsForge Logging (Database Backup)
     if (insforge) {
       try {
-        await insforge.database.from("chat_logs").insert([
-          {
-            lead_name: validatedLead ? sanitizeText(validatedLead.name) : null,
-            lead_email: validatedLead ? sanitizeText(validatedLead.email) : null,
-            lead_company: validatedLead ? sanitizeText(validatedLead.company) : null,
-            lead_summary: validatedLead ? sanitizeText(validatedLead.summary) : null,
-            transcript: sanitizeText(transcript),
-            last_reply: sanitizeText(reply),
-            is_lead: !!validatedLead,
-          },
-        ]);
+        await insforge.insert("chat_logs", {
+          lead_name: validatedLead ? sanitizeText(validatedLead.name) : null,
+          lead_email: validatedLead ? sanitizeText(validatedLead.email) : null,
+          lead_company: validatedLead ? sanitizeText(validatedLead.company) : null,
+          lead_summary: validatedLead ? sanitizeText(validatedLead.summary) : null,
+          transcript: sanitizeText(transcript),
+          last_reply: sanitizeText(reply),
+          is_lead: !!validatedLead,
+        });
       } catch (dbError) {
         console.error("InsForge logging failed:", dbError);
         // Don't fail the request if logging fails
