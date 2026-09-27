@@ -94,13 +94,24 @@ export function initContactForm(): void {
         throw new Error('Message must be at least 10 characters');
       }
 
-      // Prepare form data
-      const formData = new FormData(form);
-      
-      // Submit to API endpoint
-      const response = await fetch('/api/contact', {
+      // Prepare payload — POST JSON to the Netlify function.
+      // (The site is built as a static site, so /api/contact is not a live endpoint.)
+      const payload = {
+        firstName: elements.firstName.value.trim(),
+        lastName: elements.lastName.value.trim(),
+        email: elements.email.value.trim(),
+        phone: elements.phone.value.trim(),
+        company: elements.company.value.trim(),
+        projectType: elements.projectType.value,
+        timeline: elements.timeline?.value || '',
+        message: elements.message.value.trim(),
+        newsletter: elements.newsletter?.checked === true,
+      };
+
+      const response = await fetch('/.netlify/functions/contact-form', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();

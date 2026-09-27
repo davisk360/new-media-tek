@@ -1,18 +1,16 @@
-const sgMail = require('@sendgrid/mail');
-
 /**
- * Send a lead email via SendGrid
+ * Send a lead email via Resend (https://resend.com)
  * @param {string} source - 'contact' or 'chatbot'
  * @param {Object} leadData - { name, email, company, summary?, message?, transcript? }
  * @returns {Promise<boolean>} - true if sent successfully
  */
 async function sendLeadEmail(source, leadData) {
-  const apiKey = process.env.SENDGRID_API_KEY || process.env.NETLIFY_EMAILS_PROVIDER_API_KEY;
-  const verifiedSender = process.env.SENDGRID_VERIFIED_SENDER || "contact@newmediatek.net";
-  const recipient = "contact@newmediatek.net";
+  const apiKey = process.env.RESEND_API_KEY;
+  const verifiedSender = process.env.RESEND_FROM || "New Media Tek <contact@newmediatek.net>";
+  const recipient = process.env.LEAD_RECIPIENT || "contact@newmediatek.net";
 
   if (!apiKey) {
-    console.error("[sendLeadEmail] No SendGrid API key found");
+    console.error("[sendLeadEmail] No RESEND_API_KEY found");
     return false;
   }
 
@@ -21,23 +19,35 @@ async function sendLeadEmail(source, leadData) {
     return false;
   }
 
-  sgMail.setApiKey(apiKey);
-
   const timestamp = new Date().toLocaleString('en-US', { timeZone: 'Pacific/Honolulu' });
   const icon = source === 'contact' ? '📋' : '🔥';
   const title = source === 'contact' ? 'Contact Form' : 'Chatbot Lead';
 
-  const msg = {
-    to: recipient,
-    from: verifiedSender,
-    subject: `${icon} ${title}: ${leadData.company || 'Unknown'} - ${timestamp}`,
-    text: buildTextContent(source, leadData, timestamp),
-    html: buildHtmlContent(source, leadData, timestamp)
-  };
-
   try {
-    const response = await sgMail.send(msg);
-    console.log(`[sendLeadEmail] ${source} email sent, status:`, response[0]?.statusCode);
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: verifiedSender,
+        to: [recipient],
+        reply_to: leadData.email,
+        subject: `${icon} ${title}: ${leadData.company || 'Unknown'} - ${timestamp}`,
+        text: buildTextContent(source, leadData, timestamp),
+        html: buildHtmlContent(source, leadData, timestamp)
+      })
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(`[sendLeadEmail] ${source} email failed (${response.status}):`, body);
+      return false;
+    }
+
+    const result = await response.json();
+    console.log(`[sendLeadEmail] ${source} email sent, id:`, result.id);
     return true;
   } catch (error) {
     console.error(`[sendLeadEmail] ${source} email failed:`, error.message);
