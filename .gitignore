@@ -117,3 +117,6 @@ netlify/functions/cms-api.js
 .roo
 .trae
 .windsurf
+
+# Netlify dev artifact
+deno.lock
