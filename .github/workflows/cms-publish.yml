@@ -41,6 +41,11 @@ jobs:
 
       - name: Build site
         run: bun run build
+        env:
+          # Public (browser-visible) values — safe to embed; needed so the
+          # static build renders CMS content instead of content.ts fallbacks.
+          PUBLIC_INSFORGE_URL: https://shneyhp8.us-west.insforge.app
+          PUBLIC_INSFORGE_ANON_KEY: anon_5980aa5d7b1bfdab81c5dd1684b4ca6a2202ea841a1544d1e38e9fad7193d024
 
       - name: Deploy to Netlify production
         # npx fetches netlify-cli on first run; netlify.toml in the repo root
