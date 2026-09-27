@@ -1,5 +1,5 @@
 const { OpenAI } = require("openai");
-const { createClient } = require("@supabase/supabase-js");
+const { createAdminClient } = require("@insforge/sdk");
 const { extractLead, cleanReply } = require("./lib/extractLead");
 const { sendLeadEmail } = require("./lib/sendLeadEmail");
 const { checkRateLimit } = require("./lib/rateLimit");
@@ -248,14 +248,20 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // Construct Transcript (needed for both email and Supabase)
+    // Construct Transcript (needed for both email and chat_logs)
     const transcript = messages
       .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
       .join("\n");
 
-    // Supabase client (used for dedup check + logging)
-    const supabase = (process.env.PUBLIC_SUPABASE_URL && process.env.PUBLIC_SUPABASE_ANON_KEY)
-      ? createClient(process.env.PUBLIC_SUPABASE_URL, process.env.PUBLIC_SUPABASE_ANON_KEY)
+    // InsForge admin client (used for dedup check + logging). The API key
+    // runs as project_admin, which bypasses RLS — required because chat_logs
+    // deliberately has no SELECT policy (transcripts contain PII and must
+    // stay server-side).
+    const insforge = (process.env.INSFORGE_URL && process.env.INSFORGE_API_KEY)
+      ? createAdminClient({
+          baseUrl: process.env.INSFORGE_URL,
+          apiKey: process.env.INSFORGE_API_KEY,
+        })
       : null;
 
     // Send Email via shared utility (Lead Alerts) with 24h deduplication
@@ -263,10 +269,10 @@ exports.handler = async (event, context) => {
     if (validatedLead && isValidEmail(validatedLead.email)) {
       // Check for duplicate lead in the last 24 hours
       let isDuplicate = false;
-      if (supabase) {
+      if (insforge) {
         try {
           const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-          const { data: existing } = await supabase
+          const { data: existing } = await insforge.database
             .from("chat_logs")
             .select("id")
             .eq("lead_email", validatedLead.email.toLowerCase())
@@ -290,10 +296,10 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // Supabase Logging (Database Backup)
-    if (supabase) {
+    // InsForge Logging (Database Backup)
+    if (insforge) {
       try {
-        await supabase.from("chat_logs").insert([
+        await insforge.database.from("chat_logs").insert([
           {
             lead_name: validatedLead ? sanitizeText(validatedLead.name) : null,
             lead_email: validatedLead ? sanitizeText(validatedLead.email) : null,
@@ -305,7 +311,7 @@ exports.handler = async (event, context) => {
           },
         ]);
       } catch (dbError) {
-        console.error("Supabase logging failed:", dbError);
+        console.error("InsForge logging failed:", dbError);
         // Don't fail the request if logging fails
       }
     }

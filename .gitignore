@@ -100,3 +100,18 @@ netlify/functions/trigger-rebuild.js
 # load, queried non-existent tables content/content_types/media, and had no callers; the
 # CMS dashboard reads/writes Supabase directly via the anon key)
 netlify/functions/cms-api.js
+
+# InsForge & AI agent skills
+.insforge
+.agent
+.agents
+.augment
+.claude
+.cline
+.github/copilot*
+.kilocode
+.qoder
+.qwen
+.roo
+.trae
+.windsurf

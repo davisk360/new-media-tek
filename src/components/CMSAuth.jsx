@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import VISUAL_CMS_Dashboard from './VISUAL_CMS_Dashboard.jsx';
-import supabase from '../utils/supabaseClient.js';
+import insforge from '../utils/insforgeClient.js';
 
 const CMSAuth = () => {
   const [email, setEmail] = useState('');
@@ -11,25 +11,32 @@ const CMSAuth = () => {
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check for an existing Supabase Auth session on mount, and subscribe to
-  // auth state changes so sign-in/sign-out elsewhere is reflected here.
+  // Check for an existing InsForge session on mount (the SDK rehydrates via
+  // the httpOnly refresh cookie), and subscribe to auth state changes so
+  // sign-in/sign-out elsewhere is reflected here.
   useEffect(() => {
-    if (!supabase) {
-      setError('Supabase is not configured.');
+    if (!insforge) {
+      setError('CMS backend is not configured.');
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
+    const checkUser = () =>
+      insforge.auth.getCurrentUser().then(({ data }) => {
+        setIsAuthenticated(!!data?.user);
+      });
+
+    checkUser();
+
+    // onAuthStateChange emits event names only — re-check the user on each one.
+    const unsubscribe = insforge.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+      } else {
+        checkUser();
+      }
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-    });
-
-    return () => {
-      sub.subscription.unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   const handleSubmit = async (e) => {
@@ -37,14 +44,14 @@ const CMSAuth = () => {
     setLoading(true);
     setError('');
 
-    if (!supabase) {
-      setError('Supabase is not configured.');
+    if (!insforge) {
+      setError('CMS backend is not configured.');
       setLoading(false);
       return;
     }
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await insforge.auth.signInWithPassword({
         email,
         password,
       });
@@ -69,8 +76,8 @@ const CMSAuth = () => {
   }, []);
 
   const handleLogout = async () => {
-    if (supabase) {
-      await supabase.auth.signOut();
+    if (insforge) {
+      await insforge.auth.signOut();
     }
     setIsAuthenticated(false);
     setEmail('');
@@ -195,7 +202,7 @@ const CMSAuth = () => {
         
         {import.meta.env.DEV && (
           <div className="text-center text-xs text-gray-400 mt-4 p-2 bg-gray-50 rounded">
-            Sign in with the CMS admin account created in Supabase Auth.
+            Sign in with the CMS admin account created in InsForge.
           </div>
         )}
       </div>

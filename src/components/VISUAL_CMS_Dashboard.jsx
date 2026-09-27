@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import supabase from '../utils/supabaseClient.js';
+import insforge from '../utils/insforgeClient.js';
 import {
   Home, 
   Users, 
@@ -98,8 +98,25 @@ const COMMON_ICONS = [
   { name: 'phone', label: 'Contact/Communication', Icon: Phone },
 ];
 
-// Shared Supabase client (imported at the top of the file). The same instance
+// Shared InsForge client (imported at the top of the file). The same instance
 // is used by CMSAuth so the authenticated session from sign-in is visible here.
+
+// visual_content has a UNIQUE constraint on `page`; InsForge upsert cannot
+// target that key, so saves are update-then-insert.
+const savePageContent = async (page, content) => {
+  const { data: updated, error } = await insforge.database
+    .from('visual_content')
+    .update({ content, updated_at: new Date().toISOString() })
+    .eq('page', page)
+    .select();
+  if (error) throw error;
+  if (!updated || updated.length === 0) {
+    const { error: insertError } = await insforge.database
+      .from('visual_content')
+      .insert([{ page, content }]);
+    if (insertError) throw insertError;
+  }
+};
 
 // Add New Page Form Component
 const AddNewPageForm = ({ onSubmit, onCancel }) => {
@@ -1087,15 +1104,15 @@ const VISUAL_CMS_Dashboard = () => {
   }, [activeSection]);
 
   const loadContent = async () => {
-    if (!supabase) return;
+    if (!insforge) return;
     
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await insforge.database
         .from('visual_content')
         .select('*')
         .eq('page', activeSection)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setContent(data.content || {});
@@ -1108,18 +1125,10 @@ const VISUAL_CMS_Dashboard = () => {
   };
 
   const saveContent = async () => {
-    if (!supabase) return;
+    if (!insforge) return;
 
     try {
-      const { error } = await supabase
-        .from('visual_content')
-        .upsert({
-          page: activeSection,
-          content: content,
-          updated_at: new Date().toISOString()
-        });
-
-      if (error) throw error;
+      await savePageContent(activeSection, content);
       alert('Content saved successfully!');
     } catch (error) {
       console.error('Error saving content:', error);
@@ -1129,25 +1138,22 @@ const VISUAL_CMS_Dashboard = () => {
 
   // Save and publish - saves content then triggers Netlify rebuild
   const saveAndPublish = async () => {
-    if (!supabase) return;
+    if (!insforge) return;
 
     try {
-      const { error } = await supabase
-        .from('visual_content')
-        .upsert({
-          page: activeSection,
-          content: content,
-          updated_at: new Date().toISOString()
-        });
-
-      if (error) throw error;
+      await savePageContent(activeSection, content);
 
       // Trigger Netlify rebuild via the server-side cms-publish function (the
       // build hook URL is a server-only env var, never exposed to the client).
-      const { data: { session } } = await supabase.auth.getSession();
+      // refreshSession() returns a fresh access token for the Bearer header.
+      const { data: session } = await insforge.auth.refreshSession();
+      if (!session?.accessToken) {
+        alert('Content saved, but your session expired — sign in again to publish.');
+        return;
+      }
       const response = await fetch('/.netlify/functions/cms-publish', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${session?.access_token}` },
+        headers: { Authorization: `Bearer ${session.accessToken}` },
       });
 
       if (response.ok) {
@@ -1170,17 +1176,17 @@ const VISUAL_CMS_Dashboard = () => {
 
   // Add new page functionality
   const addNewPage = async (pageData) => {
-    if (!supabase) return;
+    if (!insforge) return;
 
     try {
       // Add to visual_content table
-      const { error } = await supabase
+      const { error } = await insforge.database
         .from('visual_content')
-        .insert({
+        .insert([{
           page: pageData.pageId,
           content: pageData.content || {},
           updated_at: new Date().toISOString()
-        });
+        }]);
 
       if (error) throw error;
 
@@ -1750,7 +1756,7 @@ const VISUAL_CMS_Dashboard = () => {
             </div>
             <button
               onClick={async () => {
-                if (supabase) await supabase.auth.signOut();
+                if (insforge) await insforge.auth.signOut();
                 window.location.reload();
               }}
               className="px-3 py-1.5 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 flex items-center gap-2"

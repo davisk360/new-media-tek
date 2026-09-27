@@ -1,14 +1,14 @@
 // Content fetching utility for Visual CMS
-// This bridges the CMS (Supabase) to the website pages
+// This bridges the CMS (InsForge) to the website pages
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@insforge/sdk';
 
-// Initialize Supabase client for server-side fetching
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// Initialize InsForge client for build-time fetching (anon key, public read)
+const insforgeUrl = import.meta.env.PUBLIC_INSFORGE_URL;
+const insforgeKey = import.meta.env.PUBLIC_INSFORGE_ANON_KEY;
 
-const supabase = supabaseUrl && supabaseKey 
-  ? createClient(supabaseUrl, supabaseKey)
+const insforge = insforgeUrl && insforgeKey
+  ? createClient({ baseUrl: insforgeUrl, anonKey: insforgeKey })
   : null;
 
 // Type definitions for content
@@ -234,21 +234,21 @@ const defaultProjects: ProjectContent[] = [
 ];
 
 /**
- * Fetch page content from Supabase CMS
+ * Fetch page content from InsForge CMS
  * Falls back to default content if CMS unavailable
  */
 export async function getPageContent(page: string): Promise<PageContent> {
-  if (!supabase) {
-    console.warn('Supabase not configured, using default content for:', page);
+  if (!insforge) {
+    console.warn('InsForge not configured, using default content for:', page);
     return defaultContent[page] || {};
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await insforge.database
       .from('visual_content')
       .select('content')
       .eq('page', page)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.warn('Error fetching content for', page, ':', error.message);
@@ -267,21 +267,21 @@ export async function getPageContent(page: string): Promise<PageContent> {
 }
 
 /**
- * Fetch portfolio projects from Supabase CMS
+ * Fetch portfolio projects from InsForge CMS
  * Falls back to default projects if CMS unavailable
  */
 export async function getProjects(): Promise<ProjectContent[]> {
-  if (!supabase) {
-    console.warn('Supabase not configured, using default projects');
+  if (!insforge) {
+    console.warn('InsForge not configured, using default projects');
     return defaultProjects;
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await insforge.database
       .from('visual_content')
       .select('content')
       .eq('page', 'portfolio')
-      .single();
+      .maybeSingle();
 
     if (error || !data?.content?.projects) {
       return defaultProjects;
@@ -299,12 +299,12 @@ export async function getProjects(): Promise<ProjectContent[]> {
  * Useful for preloading or SSG
  */
 export async function getAllContent(): Promise<Record<string, PageContent>> {
-  if (!supabase) {
+  if (!insforge) {
     return defaultContent;
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await insforge.database
       .from('visual_content')
       .select('page, content');
 
