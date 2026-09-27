@@ -1,5 +1,6 @@
-// CMS publish endpoint: validates the caller's Supabase Auth JWT, then
-// triggers a site rebuild. Supports two backends (env-gated):
+// CMS publish endpoint: validates the caller's InsForge access token AND
+// checks the cms_admins allowlist, then triggers a site rebuild. Supports
+// two backends (env-gated):
 //
 //   1. GitHub repository_dispatch (primary, used now): POSTs an event to the
 //      GitHub API, which triggers .github/workflows/cms-publish.yml to build
@@ -21,16 +22,16 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
+  const insforgeUrl = process.env.INSFORGE_URL || process.env.PUBLIC_INSFORGE_URL;
+  const insforgeApiKey = process.env.INSFORGE_API_KEY;
   const githubToken = process.env.GITHUB_DISPATCH_TOKEN;
   const githubRepo = process.env.GITHUB_REPO;
   const buildHookUrl = process.env.NETLIFY_BUILD_HOOK;
 
-  if (!supabaseUrl || !anonKey) {
+  if (!insforgeUrl || !insforgeApiKey) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Supabase is not configured' }),
+      body: JSON.stringify({ error: 'InsForge is not configured' }),
     };
   }
   if (!githubToken && !buildHookUrl) {
@@ -52,21 +53,42 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
-  // Validate the JWT by asking Supabase Auth for the user it belongs to.
+  // Validate the token by asking InsForge for the session's user.
   // A valid token returns the user object; an invalid/expired token returns
   // non-2xx, which we treat as unauthorized.
+  let callerEmail;
   try {
-    const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
-      headers: { apikey: anonKey, Authorization: `Bearer ${token}` },
+    const userRes = await fetch(`${insforgeUrl}/api/auth/sessions/current`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!userRes.ok) {
       return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
     }
+    const payload = await userRes.json();
+    callerEmail = payload?.user?.email || payload?.email || null;
   } catch (err) {
     return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
-  // JWT is valid -> trigger the rebuild via the configured backend.
+  // Allowlist check: the caller must be a CMS admin (cms_admins table).
+  // The API key runs as project_admin so it bypasses cms_admins' RLS.
+  try {
+    const adminRes = await fetch(
+      `${insforgeUrl}/api/database/records/cms_admins?email=ilike.${encodeURIComponent(callerEmail || '')}&select=email`,
+      { headers: { Authorization: `Bearer ${insforgeApiKey}` } }
+    );
+    const admins = adminRes.ok ? await adminRes.json() : [];
+    const allowed = Array.isArray(admins)
+      ? admins.some((a) => a.email?.toLowerCase() === callerEmail?.toLowerCase())
+      : false;
+    if (!allowed) {
+      return { statusCode: 403, body: JSON.stringify({ error: 'Forbidden: not a CMS admin' }) };
+    }
+  } catch (err) {
+    return { statusCode: 403, body: JSON.stringify({ error: 'Forbidden' }) };
+  }
+
+  // Caller is authenticated AND allowlisted -> trigger the rebuild.
   // Prefer GitHub dispatch; fall back to the Netlify build hook.
   try {
     if (githubToken && githubRepo) {
