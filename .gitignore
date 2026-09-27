@@ -10,6 +10,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+# Bun is the package manager — npm's lockfile must never be committed
+package-lock.json
 
 # Environment
 .env
