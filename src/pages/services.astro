@@ -584,6 +584,46 @@ const schema = {
       </div>
     </section>
 
+    <!-- Service Questions (AEO: visible Q&A, no schema — extractable by answer engines) -->
+    <section class="mt-24 mb-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">{c('qa_title', 'Service Questions')}</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          {c('qa_subtitle', 'Common questions about how we scope and deliver .NET services')}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_1_q', 'Do you take over existing .NET codebases?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_1_a', 'Yes. Most engagements start with an existing system. We begin with an architecture and code review, stabilize what is there, then modernize incrementally — no big-bang rewrites.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_2_q', 'Should we modernize or rebuild our legacy .NET application?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_2_a', 'It depends on technical debt and business risk. .NET Framework 2.0-4.8 systems usually benefit from incremental migration to .NET 10; we assess your codebase and recommend the lowest-risk path during Discovery.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_3_q', 'Can you integrate new APIs with our existing enterprise systems?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_3_a', 'Yes — integration is core to our API work. We build REST and gRPC services that connect to legacy backends, ERPs, and third-party platforms with authentication, caching, and monitoring built in.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_4_q', 'Do you provide ongoing support after delivery?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_4_a', 'Yes. Cloud Infrastructure & DevOps engagements include CI/CD, monitoring, and alerting. We also offer retainer-based maintenance and periodic architecture reviews for delivered systems.')}
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>

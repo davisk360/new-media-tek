@@ -58,14 +58,11 @@ const socialImageURL = new URL(image, Astro.url);
   <!-- Performance Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://unpkg.com">
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
   
   <!-- Fonts with display=swap for better CLS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- Lucide Icons - loaded async for better performance -->
-  <script src="https://unpkg.com/lucide@0.562.0/dist/umd/lucide.min.js" is:inline></script>
   <ClientRouter />
   <slot name="head" />
   
@@ -117,19 +114,36 @@ const socialImageURL = new URL(image, Astro.url);
   <Footer />
 
   <!-- Chat Widget Component -->
-  <ChatWidget client:load />
+  <ChatWidget client:idle />
 
   <!-- Initialize Lucide Icons & Handle Transitions -->
   <script>
-    // Module script: Runs once per session (SPA-like)
-    
-    // Re-initialize icons on every page navigation
+    // Bundled lucide (tree-shaken to used icons) — replaces the render-blocking
+    // unpkg CDN script. Module scripts are deferred, so this never blocks paint.
+    import {
+      createIcons,
+      ArrowLeft, ArrowRight, ArrowRightLeft, Award, BarChart3, BookOpen,
+      Brain, Briefcase, Bug, Building, Calendar, Check, CheckCircle, Cloud,
+      Code, Code2, Cpu, Crown, Database, Factory, FileCheck, FileText,
+      FolderOpen, GitBranch, Globe, Landmark, Layers, Layout, Linkedin,
+      Loader2, Lock, Mail, Menu, Network, Palette, PenTool, Phone, Power,
+      Rocket, Search, Send, Server, Settings, Shield, ShieldCheck, Terminal,
+      TrendingUp, Twitter, Users, X, Zap
+    } from 'lucide';
+
+    const icons = {
+      ArrowLeft, ArrowRight, ArrowRightLeft, Award, BarChart3, BookOpen,
+      Brain, Briefcase, Bug, Building, Calendar, Check, CheckCircle, Cloud,
+      Code, Code2, Cpu, Crown, Database, Factory, FileCheck, FileText,
+      FolderOpen, GitBranch, Globe, Landmark, Layers, Layout, Linkedin,
+      Loader2, Lock, Mail, Menu, Network, Palette, PenTool, Phone, Power,
+      Rocket, Search, Send, Server, Settings, Shield, ShieldCheck, Terminal,
+      TrendingUp, Twitter, Users, X, Zap
+    };
+
+    // Re-initialize icons on every page navigation (fires on initial load too)
     document.addEventListener('astro:page-load', () => {
-      // @ts-ignore
-      if (typeof window.lucide !== 'undefined') {
-        // @ts-ignore
-        window.lucide.createIcons();
-      }
+      createIcons({ icons });
     });
 
     // Handle external link transitions - Attached once globally

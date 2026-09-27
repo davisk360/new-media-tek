@@ -5,6 +5,7 @@ export const posts = {
     category: 'Database',
     readTime: '4 min',
     publishDate: '2026-01-13',
+    updatedDate: '2026-07-11',
     author: 'Senior .NET Architect',
     content: `<h2>Why EF Core 10 Performance Matters for Enterprise Applications</h2>
 <p><strong>Entity Framework Core 10</strong> represents a significant leap forward in .NET data access performance. As organizations migrate from legacy <strong>.NET Framework</strong> applications to modern <strong>.NET 10</strong> solutions, optimizing database operations becomes critical for maintaining competitive advantage.</p>
@@ -61,6 +62,7 @@ export const posts = {
     category: 'Architecture',
     readTime: '5 min',
     publishDate: '2026-01-12',
+    updatedDate: '2026-07-11',
     author: 'Senior .NET Architect',
     content: `<h2>The End of WCF: Why gRPC is the Future</h2>
 <p><strong>Windows Communication Foundation (WCF)</strong> served enterprise .NET applications well for over a decade. However, with Microsoft's focus on cross-platform <strong>.NET 10</strong> development, <strong>gRPC</strong> has emerged as the modern replacement for service-to-service communication.</p>
@@ -139,6 +141,7 @@ export const posts = {
     category: 'AI & Development',
     readTime: '4 min',
     publishDate: '2026-01-11',
+    updatedDate: '2026-07-11',
     author: 'Senior .NET Architect',
     content: `<h2>How AI Accelerates Enterprise .NET Development</h2>
 <p>The integration of <strong>AI-powered development tools</strong> into <strong>.NET development workflows</strong> represents a paradigm shift in how enterprise software is built. At New Media Tek, our <strong>Senior .NET Architects</strong> leverage AI to deliver projects 40% faster while maintaining the quality standards Fortune 500 clients demand.</p>
@@ -223,6 +226,7 @@ export const posts = {
     category: 'Modernization',
     readTime: '5 min',
     publishDate: '2026-01-10',
+    updatedDate: '2026-07-11',
     author: 'Senior .NET Architect',
     content: `<h2>Why Modernize Your .NET Framework Applications?</h2>
 <p>Organizations running <strong>.NET Framework 2.0 through 4.8</strong> applications face mounting challenges: security vulnerabilities, increasing maintenance costs, difficulty hiring developers, and inability to leverage modern cloud infrastructure. <strong>.NET 10</strong> offers a clear path forward.</p>

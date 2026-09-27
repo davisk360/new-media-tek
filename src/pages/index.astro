@@ -94,75 +94,63 @@ const professionalServiceSchema = {
   }
 };
 
+// Single source of truth for FAQs — CMS keys (faq_N_q / faq_N_a) override the
+// fallbacks at build time, and BOTH the visible cards and the FAQPage schema are
+// generated from this same array so they can never drift apart.
+const faqs = [
+  {
+    qKey: 'faq_1_q', aKey: 'faq_1_a',
+    q: 'Do you work with legacy .NET framework versions?',
+    a: 'Yes, we specialize in legacy modernization. We have deep expertise in .NET Framework versions 2.0 through 4.8 and help enterprises migrate to modern .NET 10 architectures with EF Core 10 while preserving critical business logic.'
+  },
+  {
+    qKey: 'faq_2_q', aKey: 'faq_2_a',
+    q: 'How does your AI-augmented development process work?',
+    a: 'We integrate advanced AI tools into our development workflow for code generation, automated testing, and pattern recognition. This allows our Senior Architects to deliver enterprise-grade software up to 40% faster without compromising security or quality.'
+  },
+  {
+    qKey: 'faq_3_q', aKey: 'faq_3_a',
+    q: "What does 'Senior-Led' mean for my project?",
+    a: 'Unlike agencies that rely on junior developers, every New Media Tek project is architected and actively led by a Senior .NET Architect with Fortune 500 experience. This ensures superior code quality, scalability, and long-term maintainability.'
+  },
+  {
+    qKey: 'faq_4_q', aKey: 'faq_4_a',
+    q: 'Can you handle high-scale enterprise applications?',
+    a: 'Yes. Our team has built and deployed solutions for Fortune 500 companies handling millions of transactions. We specialize in N-tier architecture, distributed caching (Redis), and scalable cloud infrastructure.'
+  },
+  {
+    qKey: 'faq_5_q', aKey: 'faq_5_a',
+    q: 'Do you handle frontend design and cloud hosting?',
+    a: 'Yes. We are a full-service modernization partner. Beyond .NET backend, we provide comprehensive UX/UI Design (React 19, Angular 21, Blazor) and Cloud Infrastructure management (Azure Functions, AWS Lambda, Docker/Kubernetes, CI/CD) to deliver complete, production-ready solutions.'
+  },
+  {
+    qKey: 'faq_6_q', aKey: 'faq_6_a',
+    q: 'What industries do you specialize in?',
+    a: 'We work across multiple industries including finance, healthcare, manufacturing, and retail. Our experience includes trading platforms, HIPAA-compliant systems, ERP solutions, and e-commerce platforms for Fortune 500 companies.'
+  },
+  {
+    qKey: 'faq_7_q', aKey: 'faq_7_a',
+    q: 'How quickly can you start a new project?',
+    a: 'We can typically begin within 1-2 weeks of project confirmation. Our AI-augmented onboarding process includes rapid architecture assessment, automated project setup, and dedicated team allocation to ensure fast project initiation.'
+  },
+  {
+    qKey: 'faq_8_q', aKey: 'faq_8_a',
+    q: 'What is your pricing model?',
+    a: "We offer flexible pricing models including fixed-price projects, time and materials, and dedicated team arrangements. During our initial consultation, we'll recommend the most cost-effective approach based on your project scope and requirements."
+  }
+];
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Do you work with legacy .NET framework versions?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, we specialize in legacy modernization. We have deep expertise in .NET Framework versions 2.0 through 4.8 and help enterprises migrate to modern .NET 10 architectures with EF Core 10 while preserving critical business logic."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does your AI-augmented development process work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We integrate advanced AI tools into our development workflow for code generation, automated testing, and pattern recognition. This allows our Senior Architects to deliver enterprise-grade software up to 40% faster without compromising security or quality."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does 'Senior-Led' mean for my project?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Unlike agencies that rely on junior developers, every New Media Tek project is architected and actively led by a Senior .NET Architect with Fortune 500 experience. This ensures superior code quality, scalability, and long-term maintainability."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can you handle high-scale enterprise applications?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Our team has built and deployed solutions for Fortune 500 companies handling millions of transactions. We specialize in N-tier architecture, distributed caching (Redis), and scalable cloud infrastructure."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you handle frontend design and cloud hosting?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. We are a full-service modernization partner. Beyond .NET backend, we provide comprehensive UX/UI Design (React 19, Angular 21, Blazor) and Cloud Infrastructure management (Azure Functions, AWS Lambda, Docker/Kubernetes, CI/CD) to deliver complete, production-ready solutions."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What industries do you specialize in?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We work across multiple industries including finance, healthcare, manufacturing, and retail. Our experience includes trading platforms, HIPAA-compliant systems, ERP solutions, and e-commerce platforms for Fortune 500 companies."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How quickly can you start a new project?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We can typically begin within 1-2 weeks of project confirmation. Our AI-augmented onboarding process includes rapid architecture assessment, automated project setup, and dedicated team allocation to ensure fast project initiation."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is your pricing model?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We offer flexible pricing models including fixed-price projects, time and materials, and dedicated team arrangements. During our initial consultation, we'll recommend the most cost-effective approach based on your project scope and requirements."
-      }
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": c(f.qKey, f.q),
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": c(f.aKey, f.a)
     }
-  ]
+  }))
 };
 ---
 
@@ -374,40 +362,14 @@ const faqSchema = {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_1_q', 'Do you work with legacy .NET versions?')}</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {c('faq_1_a', 'Yes, we specialize in legacy modernization. We have deep expertise in .NET Framework versions 2.0 through 4.8 and help enterprises migrate to modern .NET 10 architectures while preserving critical business logic.')}
-          </p>
-        </div>
-
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_2_q', 'How does AI-augmented development work?')}</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {c('faq_2_a', 'We integrate advanced AI tools into our workflow for code generation, automated testing, and pattern recognition. This allows our Senior Architects to deliver enterprise-grade software up to 40% faster without compromising security.')}
-          </p>
-        </div>
-
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_3_q', 'What does "Senior-Led" mean?')}</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {c('faq_3_a', 'Unlike agencies that rely on junior developers, every project is architected and actively led by a Senior .NET Architect with Fortune 500 experience. This ensures superior quality and scalability.')}
-          </p>
-        </div>
-
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_4_q', 'Can you handle high-scale applications?')}</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {c('faq_4_a', 'Yes. Our team has built solutions for Fortune 500 companies handling millions of transactions. We specialize in N-tier architecture, distributed caching (Redis), and scalable cloud infrastructure.')}
-          </p>
-        </div>
-
-        <div class="glass-card rounded-2xl p-6 md:col-span-2">
-          <h3 class="text-lg font-semibold text-white mb-3">{c('faq_5_q', 'Do you handle frontend design and cloud DevOps?')}</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {c('faq_5_a', 'Yes. We are a full-service modernization partner. Beyond .NET backend, we provide comprehensive UX/UI Design (React 19, Angular 21, Blazor) and Cloud Infrastructure management (Azure Functions, AWS Lambda, Docker/Kubernetes, CI/CD) to deliver complete, production-ready solutions.')}
-          </p>
-        </div>
+        {faqs.map((f) => (
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-3">{c(f.qKey, f.q)}</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              {c(f.aKey, f.a)}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
 

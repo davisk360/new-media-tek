@@ -51,3 +51,14 @@ package = "@netlify/plugin-emails"
   for = "/*.js"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Keep utility pages crawlable but out of the index (X-Robots-Tag works for HTML + any future assets)
+[[headers]]
+  for = "/admin*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/success*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

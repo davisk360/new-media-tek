@@ -127,9 +127,23 @@ INSERT INTO visual_content (page, content) VALUES
 ALTER TABLE visual_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE visual_media ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies (for now, allow all - implement proper auth in production)
-CREATE POLICY "Allow all operations on visual_content" ON visual_content FOR ALL USING (true);
-CREATE POLICY "Allow all operations on visual_media" ON visual_media FOR ALL USING (true);
+-- RLS Policies
+-- Public read: content is baked into the public site at build time anyway.
+-- Writes: authenticated role only — further scoped to the admin account by
+-- migration 20260927000000_lock_cms_writes_to_admin.sql (is_cms_admin()).
+CREATE POLICY "anon read visual_content" ON visual_content
+  FOR SELECT TO anon USING (true);
+CREATE POLICY "authenticated manage visual_content" ON visual_content
+  TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "anon read visual_media" ON visual_media
+  FOR SELECT TO anon USING (true);
+CREATE POLICY "authenticated manage visual_media" ON visual_media
+  TO authenticated USING (true) WITH CHECK (true);
+
+-- chatbot lead logging: anon may INSERT only
+CREATE POLICY "Enable anon insert on chat_logs for chatbot lead logging"
+  ON chat_logs FOR INSERT TO anon WITH CHECK (true);
 
 -- Indexes for performance
 CREATE INDEX idx_visual_content_page ON visual_content(page);

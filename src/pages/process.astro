@@ -248,6 +248,46 @@ const breadcrumbSchema = {
       </div>
     </section>
 
+    <!-- Process Questions (AEO: visible Q&A, no schema — extractable by answer engines) -->
+    <section class="mt-24 mb-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-medium text-white mb-4">{c('qa_title', 'Process Questions')}</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          {c('qa_subtitle', 'What working with us actually looks like')}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_1_q', 'How long does a typical project take?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_1_a', 'A focused modernization or API project runs about 9 weeks through our four-phase lifecycle (Discovery, Design, Development, Deployment). Larger programs are delivered in phased increments.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_2_q', 'How does AI acceleration maintain code quality?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_2_a', 'AI handles boilerplate, test generation, and pattern recognition. The Senior .NET Architect reviews all AI-generated output, and every change passes automated testing and security scanning before merge.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_3_q', 'What visibility do we get during development?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_3_a', 'Weekly demos, a shared task board, and CI pipeline access. You see running software every sprint — not status reports.')}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-3">{c('qa_4_q', 'What happens after deployment?')}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            {c('qa_4_a', 'Post-launch monitoring and AI-driven optimization, full handover documentation, and optional ongoing support. Your team owns the codebase — no lock-in.')}
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="mt-24 relative overflow-hidden rounded-3xl border px-6 py-16 text-center border-white/10 bg-white/5">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] rounded-full pointer-events-none bg-blue-600/20"></div>

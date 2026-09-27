@@ -24,6 +24,7 @@ const schema = {
   "headline": post.title,
   "description": post.excerpt,
   "datePublished": post.publishDate,
+  "dateModified": post.updatedDate || post.publishDate,
   "image": "https://newmediatek.net/images/og-default.png",
   "author": { "@type": "Organization", "name": "New Media Tek", "url": "https://newmediatek.net" },
   "publisher": { "@type": "Organization", "name": "New Media Tek", "logo": { "@type": "ImageObject", "url": "https://newmediatek.net/images/logo-icon.png" } },
@@ -50,7 +51,10 @@ const breadcrumbSchema = {
       <div class="flex gap-3 mb-4">
         <span class="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">{post.category}</span>
         <span class="text-slate-400 text-sm">{post.readTime}</span>
-        <span class="text-slate-400 text-sm">{post.publishDate}</span>
+        <span class="text-slate-400 text-sm">Published {post.publishDate}</span>
+        {post.updatedDate && post.updatedDate !== post.publishDate && (
+          <span class="text-slate-400 text-sm">· Updated {post.updatedDate}</span>
+        )}
       </div>
       <h1 class="text-4xl font-medium text-white mb-4">{post.title}</h1>
       <p class="text-slate-400">By {post.author}</p>

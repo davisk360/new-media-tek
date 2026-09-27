@@ -4,4 +4,32 @@ Allow: /
 # AI Search Optimization
 Allow: /llms.txt
 
+# AI retrieval & answer engines — explicitly welcomed
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# /admin and /success are intentionally NOT disallowed here:
+# they carry noindex meta + X-Robots-Tag, which bots can only see if crawlable.
+
 Sitemap: https://newmediatek.net/sitemap-index.xml
