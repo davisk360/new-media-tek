@@ -1158,8 +1158,11 @@ const VISUAL_CMS_Dashboard = () => {
 
       if (response.ok) {
         alert('✅ Content saved and site rebuild triggered!\n\nChanges will be live in ~1-2 minutes.');
+      } else if (response.status === 404) {
+        alert('Content saved.\n\nPublish is unavailable under `bun run dev` — astro does not serve /.netlify/functions. Run `netlify dev` to test publishing locally, or deploy to publish in production.');
       } else {
-        alert('Content saved but rebuild failed. Try again or deploy manually from Netlify.');
+        const body = await response.text().catch(() => '');
+        alert(`Content saved but rebuild failed (HTTP ${response.status}).\n\n${body || 'Try again or deploy manually from Netlify.'}`);
       }
     } catch (error) {
       console.error('Error saving content:', error);

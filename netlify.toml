@@ -4,6 +4,8 @@
 
 [dev]
   command = "bun run dev"
+  # package.json dev script pins astro to 9195 (not astro's default 4321)
+  targetPort = 9195
 
 [functions]
   directory = "netlify/functions"

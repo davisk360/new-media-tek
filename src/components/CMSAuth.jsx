@@ -84,22 +84,10 @@ const CMSAuth = () => {
     setPassword('');
   };
 
-  // Show dashboard if authenticated
+  // Show dashboard if authenticated (the dashboard renders its own header
+  // including the Logout button — no wrapper needed here)
   if (isAuthenticated) {
-    return (
-      <div>
-        <div className="mb-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">CMS Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </div>
-        <VISUAL_CMS_Dashboard />
-      </div>
-    );
+    return <VISUAL_CMS_Dashboard />;
   }
 
   // Show login form if not authenticated
