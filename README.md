@@ -25,9 +25,9 @@ New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B cli
 ## Scope
 
 - **Public website.** A dark, glass-morphism B2B site with file-based routing: Home, Services, About, Portfolio, Process, Contact, Capabilities Statement, Contracts, Insights (blog), Privacy, Terms, Admin, and a Success/confirmation page. Built with Astro 5 + Tailwind 4, mounting React 19 islands only where interactivity is needed (CMS dashboard, chat widget, portfolio loader); everything else ships as static HTML with near-zero JavaScript.
-- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on Supabase: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
-- **Graceful content layer (`src/utils/content.ts`).** Every page pulls copy through `getPageContent()` with hardcoded fallbacks, so the site renders correctly even if Supabase or the CMS is unreachable. No blank pages when the database is down.
-- **AI chatbot with lead capture (`src/components/ChatWidget.jsx` + `netlify/functions/chat-api.js`).** An OpenAI/DeepSeek-backed assistant that logs conversations and captures qualified leads (name, email, company, summary) into Supabase, with lead-extraction (`lib/extractLead.js`) and lead-email (`lib/sendLeadEmail.js`) helpers.
+- **Custom Visual CMS (`src/components/VISUAL_CMS_Dashboard.jsx`).** Instead of adopting a hosted headless CMS, the site ships a comprehensive visual CMS dashboard on InsForge: page-by-page navigation, field-by-field inline editing, a live preview panel with real-time cursor tracking, resizable edit/preview panels, dynamic portfolio project management, and add/remove-page support. Auth-gated at `/admin`, backed by `netlify/functions/cms-api.js` and the SQL schema in `visual-cms-schema.sql`.
+- **Graceful content layer (`src/utils/content.ts`).** Every page pulls copy through `getPageContent()` with hardcoded fallbacks, so the site renders correctly even if InsForge or the CMS is unreachable. No blank pages when the database is down.
+- **AI chatbot with lead capture (`src/components/ChatWidget.jsx` + `netlify/functions/chat-api.js`).** An OpenAI/DeepSeek-backed assistant that logs conversations and captures qualified leads (name, email, company, summary) into InsForge, with lead-extraction (`lib/extractLead.js`) and lead-email (`lib/sendLeadEmail.js`) helpers.
 - **Security hardening (audit-driven, layered).** A Playwright-driven audit took the site from 78 to 98 and the chatbot from 20 to 100. Defenses span client, server, and database: CSP and security headers (production via `netlify.toml`, dev parity via `src/middleware.ts`), XSS sanitization via DOM text-content encoding, server-side input validation with HTML-entity encoding, in-memory rate limiting (20 req/min/IP), message-history and length caps, environment-based logging that strips PII in production, an admin auth gate, and prompt-injection hardening (Layer A: system/guard prompts loaded from Netlify Blobs so they stay out of source control and env vars; Layer B: user-message spotlighting via `<user_input>` delimiters plus output validation that rejects fabricated leads).
 - **Secure contact form.** An Astro API route (`src/pages/api/contact.ts`) with server-side validation, sanitization, and email/phone format checks, paired with client-side validation in `src/scripts/contact-form.ts`.
 - **Email stack.** Google Workspace hosts the contact/lead mailbox; SendGrid + Nodemailer send transactional and lead-notification email from Netlify Functions; the Netlify email plugin renders the templates (`emails/contact-form/`). DKIM/MX/SPF are configured for deliverability.
@@ -41,9 +41,9 @@ New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B cli
 | --- | --- | --- |
 | Frontend | Astro 5 (islands) + Tailwind 4 | Content-driven site that ships mostly static HTML; React only where interactivity is needed |
 | Interactivity | React 19 islands | CMS dashboard, chat widget, portfolio loader |
-| CMS | Custom Visual CMS on Supabase (Postgres) | Visual click-to-edit UX for non-technical editors; no vendor lock-in, full control |
+| CMS | Custom Visual CMS on InsForge (Postgres) | Visual click-to-edit UX for non-technical editors; no vendor lock-in, full control |
 | Backend | Netlify Functions | Chat API, CMS API, contact handler, email helpers |
-| Data | Supabase (Postgres + auth) | CMS content, chat logs, lead capture |
+| Data | InsForge (Postgres + auth) | CMS content, chat logs, lead capture |
 | AI | OpenAI / DeepSeek | Chatbot |
 | Chat prompts | Netlify Blobs (`chat-prompts` store) | System + guard prompts kept out of source control and env vars; read at runtime via `@netlify/blobs` (`connectLambda` + `getStore`), which also cleared the AWS Lambda 4KB env limit |
 | Email | Google Workspace (mailbox) + SendGrid/Nodemailer (transactional) + Netlify email plugin | Contact/lead mailbox and transactional sending from functions; DKIM/MX/SPF configured |
@@ -53,8 +53,8 @@ New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B cli
 ## Key decisions
 
 1. **Astro + islands over a SPA framework.** The site is mostly static content. Astro ships HTML with minimal JS and mounts React only for the CMS dashboard, chat widget, and portfolio loader, giving faster first paint, better SEO, and a smaller payload than a Next/Remix SPA would for this use case.
-2. **A custom Visual CMS over a hosted headless CMS.** Sanity or Contentful would have been faster to stand up but impose per-seat pricing, vendor lock-in, and a generic editor UX. A custom visual, click-to-edit CMS on Supabase was built instead, so non-technical editors see exactly where content lands before they type, at the cost of maintaining the dashboard code.
-3. **Graceful degradation via CMS fallbacks.** Pages read content through `getPageContent()` with inline fallbacks, so a Supabase outage degrades to the last hardcoded copy instead of a broken page. Uptime over freshness.
+2. **A custom Visual CMS over a hosted headless CMS.** Sanity or Contentful would have been faster to stand up but impose per-seat pricing, vendor lock-in, and a generic editor UX. A custom visual, click-to-edit CMS on InsForge was built instead, so non-technical editors see exactly where content lands before they type, at the cost of maintaining the dashboard code.
+3. **Graceful degradation via CMS fallbacks.** Pages read content through `getPageContent()` with inline fallbacks, so an InsForge outage degrades to the last hardcoded copy instead of a broken page. Uptime over freshness.
 4. **No public careers section (a deliberate brand decision).** A public careers page would attract job-seekers and dilute the premium, senior-led, Fortune 500 positioning. A private talent network was chosen instead. A product and brand call, not just a technical one.
 5. **Security as a first-class deliverable, not an afterthought.** A Playwright-driven audit, before/after scoring, and layered defenses (client + server + database) rather than a single control. The prompt-injection pass moved the chatbot's system and guard prompts into Netlify Blobs so they stay out of source control and out of env vars (which also cleared the AWS Lambda 4KB env limit that had blocked function deploys).
 6. **In-memory rate limiting, with the scale path noted.** `lib/rateLimit.js` uses an in-process store (fine for current traffic on Netlify Functions); the docs explicitly flag Redis as the path to distributed rate limiting at scale. The limitation is acknowledged, not hidden.
@@ -63,7 +63,7 @@ New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B cli
 
 ## Tech stack
 
-Astro 5.16 · Tailwind CSS 4.1 · React 19 · TypeScript · Supabase (Postgres + auth) · Netlify Functions · Netlify Blobs · OpenAI / DeepSeek · Google Workspace · SendGrid + Nodemailer · Lucide icons · `@astrojs/sitemap` · Bun
+Astro 5.16 · Tailwind CSS 4.1 · React 19 · TypeScript · InsForge (Postgres + auth) · Netlify Functions · Netlify Blobs · OpenAI / DeepSeek · Google Workspace · SendGrid + Nodemailer · Lucide icons · `@astrojs/sitemap` · Bun
 
 ## Project structure
 
@@ -79,12 +79,12 @@ src/
 └── middleware.ts      # Dev security headers
 netlify/functions/     # chat-api.js, cms-api.js, contact-form.js, lib/ (rateLimit, extractLead, sendLeadEmail)
 netlify.toml           # Build, security headers, functions, email plugin
-visual-cms-schema.sql  # Supabase schema for the Visual CMS
+visual-cms-schema.sql  # InsForge schema for the Visual CMS
 ```
 
 ## Development
 
-Requires [Bun](https://bun.sh/) and Node 18+. Environment variables are documented in `.env.example` (Supabase URL/keys, AI provider key, SendGrid key, etc.).
+Requires [Bun](https://bun.sh/) and Node 18+. Environment variables are documented in `.env.example` (InsForge URL/keys, AI provider key, SendGrid key, etc.).
 
 ```bash
 bun install
@@ -101,7 +101,7 @@ bun run lint       # astro lint
 
 ## Build credits
 
-Co-founded with a senior .NET architect who provided domain expertise and service-line direction. I designed, built, and deployed the entire web presence and supporting infrastructure: site design and ad copy, the Astro + Tailwind + React-islands build, the custom Supabase-backed Visual CMS, the AI chatbot with lead capture, SEO and Answer Engine Optimization (JSON-LD structured data), the secure contact form, the Google Workspace + SendGrid/Nodemailer email stack with DKIM/MX/SPF, and the audit-driven security hardening (CSP/headers, XSS sanitization, rate limiting, and prompt-injection defense with prompts stored in Netlify Blobs).
+Co-founded with a senior .NET architect who provided domain expertise and service-line direction. I designed, built, and deployed the entire web presence and supporting infrastructure: site design and ad copy, the Astro + Tailwind + React-islands build, the custom InsForge-backed Visual CMS, the AI chatbot with lead capture, SEO and Answer Engine Optimization (JSON-LD structured data), the secure contact form, the Google Workspace + SendGrid/Nodemailer email stack with DKIM/MX/SPF, and the audit-driven security hardening (CSP/headers, XSS sanitization, rate limiting, and prompt-injection defense with prompts stored in Netlify Blobs).
 
 ## License
 
