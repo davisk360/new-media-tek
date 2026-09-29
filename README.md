@@ -4,7 +4,7 @@
 >
 > **Live:** https://newmediatek.net/
 
-New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B clients. I built the entire web presence and supporting infrastructure: the Astro 5 + Tailwind 4 site with React 19 islands for interactivity, a custom Visual CMS, an AI chatbot with lead capture, the security stack, email deliverability, and SEO/AEO. The site ships mostly static HTML with near-zero JavaScript; React mounts only where interactivity is needed. The Scope section below details what is included.
+New Media Tek was co-founded to deliver AI-augmented .NET consulting for B2B clients. I built the entire web presence and supporting infrastructure: the Astro 5 + Tailwind 4 site with React 19 islands for interactivity, a custom Visual CMS, an AI chatbot with lead capture, the security stack, email deliverability, and SEO/AEO/GEO. The site ships mostly static HTML with near-zero JavaScript; React mounts only where interactivity is needed. The Scope section below details what is included.
 
 ## Screenshots
 
